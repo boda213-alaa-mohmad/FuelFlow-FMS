@@ -5,6 +5,7 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
+import { admins } from "@/data/mockAdmins";
 
 const UserSchema = z.object({
   email: z
@@ -34,14 +35,24 @@ export default function Login() {
     // todo: emailError, passwordError
     email?: string;
     password?: string;
+    general?: string;
   }>({
     email: "",
     password: "",
+    general: "",
   });
 
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
   // todo: handle submit for form
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    setErrors({
+      email: "",
+      password: "",
+      general: "",
+    });
 
     const result = UserSchema.safeParse(userData);
 
@@ -55,12 +66,29 @@ export default function Login() {
       console.log(fieldErrors);
       return;
     }
-    // restting errors
-    setErrors({
-      email: "",
-      password: "",
-    });
+
+    setIsSubmitting(true);
+    await new Promise((res) => setTimeout(res, 1500));
+
+    const foundAdmin = admins.find(
+      (item) =>
+        userData.email.toLowerCase() === item.email.toLowerCase() &&
+        userData.password === item.password,
+    );
+
+    if (foundAdmin === undefined) {
+      setErrors({
+        email: "",
+        password: "",
+        general: "Invalid Email make sure that email signed up before",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    setIsSubmitting(false);
     console.log("success submitting");
+    console.log(foundAdmin);
   }
 
   return (
@@ -135,12 +163,17 @@ export default function Login() {
               <p className={styles.errorInput}>{errors.password}</p>
             )}
 
+            {errors.general && (
+              <p className={styles.errorInput}>{errors.general}</p>
+            )}
+
             <Button
               variant="white"
               size="lg"
               className="mt-4 px-8 py-6 rounded-2xl"
+              disabled={isSubmitting}
             >
-              LOGIN
+              {isSubmitting ? "Checking..." : "Login"}
             </Button>
           </div>
         </form>
