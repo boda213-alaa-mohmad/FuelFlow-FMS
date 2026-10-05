@@ -68,8 +68,31 @@
   box-sizing: border-box;
 }
 
+.passwordContainer {
+  position: relative;
+}
+
+.eye {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
 .input::placeholder {
   color: #666;
+}
+
+.errorInput {
+  color: rgb(96, 4, 121);
+  font-size: 17px;
+}
+
+/* this for removing eyes browser in password input */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
 }
 
 /* Media Queries */
