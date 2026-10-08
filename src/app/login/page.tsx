@@ -1,11 +1,11 @@
 "use client";
 import { z } from "zod";
-import { useState } from "react";
+import { useState, useActionState } from "react";
 import Image from "next/image";
 import styles from "./page.module.css";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
-import { admins } from "@/data/mockAdmins";
+import { loginAction } from "@/auth/loginActions";
 
 const UserSchema = z.object({
   email: z
@@ -21,74 +21,45 @@ const UserSchema = z.object({
 });
 
 export default function Login() {
-  // ? creating user data
-  const [userData, setUserData] = useState({
-    email: "",
-    password: "",
-  });
-
   // ? eyes for password (true means password disapper eyeopen)
   const [eye, setEye] = useState<boolean>(true);
 
-  // ? creating errors if it happens
-  const [errors, setErrors] = useState<{
-    // todo: emailError, passwordError
+  // ? for Errors
+  const [localErrors, setLocalErrors] = useState<{
     email?: string;
     password?: string;
-    general?: string;
-  }>({
-    email: "",
-    password: "",
-    general: "",
-  });
+  }>({});
 
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  // ? for this "Invalid Email or Password. Make sure you are registered." in server action
+  const [hiddenMessage, setHiddenMessage] = useState<boolean>(true);
+
+  const [state, formAction, isPending] = useActionState(loginAction, null);
 
   // todo: handle submit for form
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+    setHiddenMessage(false);
+    const formData = new FormData(e.currentTarget);
+    const rawData = {
+      email: formData.get("email") as string,
+      password: formData.get("password") as string,
+    };
 
-    setErrors({
-      email: "",
-      password: "",
-      general: "",
-    });
-
-    const result = UserSchema.safeParse(userData);
+    const result = UserSchema.safeParse(rawData);
 
     if (!result.success) {
+      e.preventDefault();
+
       const fieldErrors = result.error.flatten().fieldErrors;
 
-      setErrors({
+      setLocalErrors({
         email: fieldErrors.email?.[0],
         password: fieldErrors.password?.[0],
       });
-      console.log(fieldErrors);
       return;
     }
 
-    setIsSubmitting(true);
-    await new Promise((res) => setTimeout(res, 1500));
-
-    const foundAdmin = admins.find(
-      (item) =>
-        userData.email.toLowerCase() === item.email.toLowerCase() &&
-        userData.password === item.password,
-    );
-
-    if (foundAdmin === undefined) {
-      setErrors({
-        email: "",
-        password: "",
-        general: "Invalid Email make sure that email signed up before",
-      });
-      setIsSubmitting(false);
-      return;
-    }
-
-    setIsSubmitting(false);
-    console.log("success submitting");
-    console.log(foundAdmin);
+    setLocalErrors({});
+    setHiddenMessage(true);
   }
 
   return (
@@ -114,7 +85,11 @@ export default function Login() {
       </div>
       {/* RIGHT SECTION */}
       <div className={styles["right-section"]}>
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form
+          className={styles.form}
+          onSubmit={handleSubmit}
+          action={formAction}
+        >
           <Image
             src="/brk-logo-trandy.png"
             alt="logo TAQA"
@@ -127,14 +102,11 @@ export default function Login() {
               type="text"
               placeholder="user@example.com"
               className={styles.input}
-              value={userData.email}
-              onChange={(e) => {
-                setUserData((prev) => ({ ...prev, email: e.target.value }));
-              }}
+              name="email"
             />
 
-            {errors.email && (
-              <p className={styles.errorInput}>{errors.email}</p>
+            {localErrors.email && (
+              <p className={styles.errorInput}>{localErrors.email}</p>
             )}
 
             <div className={styles.passwordContainer}>
@@ -142,13 +114,7 @@ export default function Login() {
                 type={eye ? "password" : "text"}
                 placeholder="password"
                 className={styles.input}
-                value={userData.password}
-                onChange={(e) => {
-                  setUserData((prev) => ({
-                    ...prev,
-                    password: e.target.value,
-                  }));
-                }}
+                name="password"
               />
               <span
                 className={styles.eye}
@@ -159,21 +125,20 @@ export default function Login() {
                 {eye ? <Eye size={20} /> : <EyeOff size={20} />}
               </span>
             </div>
-            {errors.password && (
-              <p className={styles.errorInput}>{errors.password}</p>
+            {localErrors.password && (
+              <p className={styles.errorInput}>{localErrors.password}</p>
             )}
 
-            {errors.general && (
-              <p className={styles.errorInput}>{errors.general}</p>
-            )}
-
+            {state?.errorMessage && hiddenMessage && isPending === false ? (
+              <p className={styles.errorInput}>{state.errorMessage}</p>
+            ) : null}
             <Button
               variant="white"
               size="lg"
               className="mt-4 px-8 py-6 rounded-2xl"
-              disabled={isSubmitting}
+              disabled={isPending}
             >
-              {isSubmitting ? "Checking..." : "Login"}
+              {isPending ? "Checking..." : "Login"}
             </Button>
           </div>
         </form>

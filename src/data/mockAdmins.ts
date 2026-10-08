@@ -10,5 +10,5 @@ export const admins: Admins[] = [
   { email: "sophia.taylor@example.com", password: "M6$wR3!yK9@h" },
   { email: "william.thomas@example.com", password: "Z2!vL8#qP5$r" },
   { email: "ava.jackson@example.com", password: "H7@xN4!mQ9#t" },
-  { email: "benjamin.white@example.com", password: "C9$rK5@wT2!p" },
+  { email: "bodaAlaa@example.com", password: "123456789" },
 ];
