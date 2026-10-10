@@ -1,11 +1,19 @@
 "use client";
 import { z } from "zod";
-import { useState, useActionState } from "react";
+import { useState, useActionState, useEffect } from "react";
 import Image from "next/image";
 import styles from "./page.module.css";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
 import { loginAction } from "@/auth/loginActions";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
+
+// todo:
+// 1. create useState for counting (done)
+// 2. add 3 times
+// 3. after that toaster appear and disabled the button
+// 4. after 4000 seconds reset all
 
 const UserSchema = z.object({
   email: z
@@ -21,6 +29,8 @@ const UserSchema = z.object({
 });
 
 export default function Login() {
+  const [disableButton, setDisableButton] = useState<boolean>(false);
+
   // ? eyes for password (true means password disapper eyeopen)
   const [eye, setEye] = useState<boolean>(true);
 
@@ -35,9 +45,32 @@ export default function Login() {
 
   const [state, formAction, isPending] = useActionState(loginAction, null);
 
+  // ? this counter for exceeding 3 times request (for counting errors in server action)
+  const [failedAttempts, setFailedAttempts] = useState<number>(0);
+
+  useEffect(() => {
+    if (state?.errorMessage) {
+      setFailedAttempts((prev) => {
+        const newCount: number = prev + 1;
+        if (newCount >= 3) {
+          setDisableButton(true);
+          toast.error("Too many failed attempts! Please wait 1 minute.");
+
+          setTimeout(() => {
+            setFailedAttempts(0);
+            setDisableButton(false);
+            toast.success("You can try logging in again.");
+          }, 60000);
+        }
+        return newCount;
+      });
+    }
+  }, [state]);
+
   // todo: handle submit for form
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     setHiddenMessage(false);
+
     const formData = new FormData(e.currentTarget);
     const rawData = {
       email: formData.get("email") as string,
@@ -65,6 +98,7 @@ export default function Login() {
   return (
     // container
     <div className={styles.container}>
+      <Toaster />
       {/* LEFT SECTION  */}
       <div className={styles["left-section"]}>
         <div className={styles.content}>
@@ -99,7 +133,7 @@ export default function Login() {
 
           <div className={styles.inputsContainer}>
             <input
-              type="text"
+              type="email"
               placeholder="user@example.com"
               className={styles.input}
               name="email"
@@ -136,9 +170,13 @@ export default function Login() {
               variant="white"
               size="lg"
               className="mt-4 px-8 py-6 rounded-2xl"
-              disabled={isPending}
+              disabled={isPending || disableButton === true}
             >
-              {isPending ? "Checking..." : "Login"}
+              {disableButton === true
+                ? "you have to wait one minute"
+                : isPending
+                  ? "Checking..."
+                  : "login"}
             </Button>
           </div>
         </form>

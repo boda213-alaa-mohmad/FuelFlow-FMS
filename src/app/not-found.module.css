@@ -1,0 +1,19 @@
+.container {
+  height: 100vh;
+  background: #f97f5c;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+.h2 {
+  font-size: 45px;
+  font-weight: 700;
+  padding: 10px 15px;
+  text-align: center;
+}
