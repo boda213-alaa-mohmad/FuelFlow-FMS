@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { logoutAction } from "@/auth/logoutAction";
 
 const navItems = [
   {
@@ -35,17 +36,21 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-[120px] h-screen bg-[#FF7A59] flex flex-col items-center justify-between rounded-tr-[40px] py-8 shadow-lg">
+    <aside className="w-\[120px\] h-screen bg-[#FF7A59] flex flex-col items-center justify-between rounded-tr-[40px] py-8 shadow-lg">
+      {/* upper icon */}
       <div className="cursor-pointer mb-4">
-        <Image
-          src="/icons/PMS.png"
-          alt="main icon"
-          width={52}
-          height={52}
-          priority
-        />
+        <Link href="/dashboard">
+          <Image
+            src="/icons/PMS.png"
+            alt="main icon"
+            width={52}
+            height={52}
+            priority
+          />
+        </Link>
       </div>
 
+      {/* meddle icons */}
       <div className="flex flex-col items-center gap-y-4 w-full px-4">
         {navItems.map((item, index) => {
           const isActive = pathname === item.path;
@@ -73,13 +78,18 @@ export default function Sidebar() {
         })}
       </div>
 
+      {/* lower icon */}
       <div className="cursor-pointer p-3 hover:bg-white/10 rounded-2xl transition-all">
-        <Image
-          src="/icons/logout.png"
-          alt="logout icon"
-          width={32}
-          height={32}
-        />
+        <form action={logoutAction}>
+          <button type="submit" className="flex items-center justify-center">
+            <Image
+              src="/icons/logout.png"
+              alt="logout icon"
+              width={32}
+              height={32}
+            />
+          </button>
+        </form>
       </div>
     </aside>
   );
