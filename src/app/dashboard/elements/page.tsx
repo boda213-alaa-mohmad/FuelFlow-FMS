@@ -1,3 +1,7 @@
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
+
 export default function Element() {
-  return <div>Elements page</div>;
+  return <div>
+    <DashboardHeader />
+  </div>;
 }
