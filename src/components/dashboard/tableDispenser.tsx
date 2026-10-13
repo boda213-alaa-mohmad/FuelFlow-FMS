@@ -2,6 +2,7 @@
 
 import { Edit3, Trash2 } from "lucide-react";
 import { EmptyState } from "./EmptyState";
+import { useTableData } from "@/hooks/useTableData";
 
 interface DispenserItem {
   id: string;
@@ -17,8 +18,8 @@ interface DispenserItem {
 const mockDispensers: DispenserItem[] = [
   {
     id: "1",
-    name: "Dispenser Name",
-    channelId: "1000",
+    name: "Dispenser A1",
+    channelId: "1001",
     station: "Station 1",
     line: "Line 1",
     order: "1",
@@ -27,40 +28,80 @@ const mockDispensers: DispenserItem[] = [
   },
   {
     id: "2",
-    name: "Dispenser Name",
-    channelId: "1000",
-    station: "Station 2",
-    line: "Line 2",
+    name: "Dispenser A2",
+    channelId: "1002",
+    station: "Station 1",
+    line: "Line 1",
     order: "2",
     position: "Back",
     status: "inactive",
   },
   {
     id: "3",
-    name: "Dispenser Name",
-    channelId: "1000",
-    station: "Station 1",
-    line: "Line 1",
+    name: "Dispenser B1",
+    channelId: "1003",
+    station: "Station 2",
+    line: "Line 2",
     order: "3",
     position: "Side",
     status: "active",
   },
   {
     id: "4",
-    name: "Dispenser Name",
-    channelId: "1000",
+    name: "Dispenser B2",
+    channelId: "1004",
     station: "Station 2",
     line: "Line 2",
     order: "4",
     position: "Front",
     status: "active",
   },
+  {
+    id: "5",
+    name: "Dispenser C1",
+    channelId: "1005",
+    station: "Station 3",
+    line: "Line 3",
+    order: "5",
+    position: "Back",
+    status: "inactive",
+  },
+  {
+    id: "6",
+    name: "Dispenser C2",
+    channelId: "1006",
+    station: "Station 3",
+    line: "Line 3",
+    order: "6",
+    position: "Side",
+    status: "active",
+  },
+  {
+    id: "7",
+    name: "Dispenser D1",
+    channelId: "1007",
+    station: "Station 4",
+    line: "Line 4",
+    order: "7",
+    position: "Front",
+    status: "active",
+  },
+  {
+    id: "8",
+    name: "Dispenser D2",
+    channelId: "1008",
+    station: "Station 4",
+    line: "Line 4",
+    order: "8",
+    position: "Back",
+    status: "inactive",
+  },
 ];
-
 export default function DispensersTable() {
+  const { data, filter } = useTableData(mockDispensers);
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-6 mt-20">
-      {mockDispensers.length === 0 ? (
+      {data.length === 0 ? (
         <EmptyState />
       ) : (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -79,7 +120,7 @@ export default function DispensersTable() {
               </thead>
 
               <tbody className="divide-y divide-gray-100 text-sm text-slate-700">
-                {mockDispensers.map((dispenser) => (
+                {data.map((dispenser) => (
                   <tr
                     key={dispenser.id}
                     className="hover:bg-slate-50/50 transition-colors"
@@ -126,6 +167,9 @@ export default function DispensersTable() {
                         <button
                           title="Delete"
                           className="p-2 rounded-xl bg-orange-50 hover:bg-orange-100 text-[#FF7A59] transition-colors cursor-pointer"
+                          onClick={() => {
+                            filter(dispenser.id);
+                          }}
                         >
                           <Trash2 size={16} />
                         </button>
@@ -138,7 +182,6 @@ export default function DispensersTable() {
           </div>
         </div>
       )}
-
     </div>
   );
 }

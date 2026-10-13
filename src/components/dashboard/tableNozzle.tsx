@@ -1,6 +1,7 @@
 "use client";
 import { Edit3, Trash2 } from "lucide-react";
 import { EmptyState } from "./EmptyState";
+import { useTableData } from "@/hooks/useTableData";
 
 interface NozzleItem {
   id: string;
@@ -12,68 +13,84 @@ interface NozzleItem {
 }
 
 const mockNozzles: NozzleItem[] = [
-//   {
-//     id: "1",
-//     name: "Name",
-//     channelId: "1000",
-//     station: "Station",
-//     dispenser: "Dispenser",
-//     status: "active",
-//   },
-//   {
-//     id: "2",
-//     name: "Name",
-//     channelId: "1000",
-//     station: "Station",
-//     dispenser: "Dispenser",
-//     status: "active",
-//   },
-//   {
-//     id: "3",
-//     name: "Name",
-//     channelId: "1000",
-//     station: "Station",
-//     dispenser: "Dispenser",
-//     status: "active",
-//   },
-//   {
-//     id: "4",
-//     name: "Name",
-//     channelId: "1000",
-//     station: "Station",
-//     dispenser: "Dispenser",
-//     status: "active",
-//   },
-//   {
-//     id: "5",
-//     name: "Name",
-//     channelId: "1000",
-//     station: "Station",
-//     dispenser: "Dispenser",
-//     status: "active",
-//   },
-//   {
-//     id: "6",
-//     name: "Name",
-//     channelId: "1000",
-//     station: "Station",
-//     dispenser: "Dispenser",
-//     status: "active",
-//   },
-//   {
-//     id: "7",
-//     name: "Name",
-//     channelId: "1000",
-//     station: "Station",
-//     dispenser: "Dispenser",
-//     status: "active",
-//   },
+  {
+    id: "1",
+    name: "Nozzle A1",
+    channelId: "3001",
+    station: "Station 1",
+    dispenser: "Dispenser A1",
+    status: "active",
+  },
+  {
+    id: "2",
+    name: "Nozzle A2",
+    channelId: "3002",
+    station: "Station 1",
+    dispenser: "Dispenser A1",
+    status: "active",
+  },
+  {
+    id: "3",
+    name: "Nozzle A3",
+    channelId: "3003",
+    station: "Station 1",
+    dispenser: "Dispenser A2",
+    status: "inactive",
+  },
+  {
+    id: "4",
+    name: "Nozzle B1",
+    channelId: "3004",
+    station: "Station 2",
+    dispenser: "Dispenser B1",
+    status: "active",
+  },
+  {
+    id: "5",
+    name: "Nozzle B2",
+    channelId: "3005",
+    station: "Station 2",
+    dispenser: "Dispenser B1",
+    status: "inactive",
+  },
+  {
+    id: "6",
+    name: "Nozzle B3",
+    channelId: "3006",
+    station: "Station 2",
+    dispenser: "Dispenser B2",
+    status: "active",
+  },
+  {
+    id: "7",
+    name: "Nozzle C1",
+    channelId: "3007",
+    station: "Station 3",
+    dispenser: "Dispenser C1",
+    status: "active",
+  },
+  {
+    id: "8",
+    name: "Nozzle C2",
+    channelId: "3008",
+    station: "Station 3",
+    dispenser: "Dispenser C2",
+    status: "inactive",
+  },
+  {
+    id: "9",
+    name: "Nozzle D1",
+    channelId: "3009",
+    station: "Station 4",
+    dispenser: "Dispenser D1",
+    status: "active",
+  },
 ];
-
 export default function NozzlesTable() {
+  const { data, filter } = useTableData(mockNozzles);
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-6 mt-20">
-      {mockNozzles.length === 0 ? (
+      {data.length === 0 ? (
         <EmptyState />
       ) : (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -89,7 +106,7 @@ export default function NozzlesTable() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 text-sm text-slate-700">
-                {mockNozzles.map((nozzle) => (
+                {data.map((nozzle) => (
                   <tr
                     key={nozzle.id}
                     className="hover:bg-slate-50/50 transition-colors"
@@ -124,6 +141,9 @@ export default function NozzlesTable() {
                         <button
                           title="Delete"
                           className="p-2 rounded-xl bg-orange-50 hover:bg-orange-100 text-[#FF7A59] transition-colors cursor-pointer"
+                          onClick={() => {
+                            filter(nozzle.id);
+                          }}
                         >
                           <Trash2 size={16} />
                         </button>
