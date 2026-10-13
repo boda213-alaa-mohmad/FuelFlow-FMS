@@ -5,6 +5,10 @@ import AddStationModal from "./AddStationModal";
 import AddDispenserModal from "./AddDispenserModal";
 import AddCompressorModal from "./AddCompressorModal";
 import AddNozzleModal from "./AddNozzleModal";
+import StationsTable from "./tableStation";
+import DispensersTable from "./tableDispenser";
+import CompressorsTable from "./tableCompressor";
+import NozzlesTable from "./tableNozzle";
 
 const TABS = [
   { id: "stations", label: "Stations", icon: "/icons/stationa.png" },
@@ -42,6 +46,46 @@ export default function DashboardHeader() {
         })}
       </div>
 
+      {activeTab === "stations" && (
+        <>
+          <AddStationModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+          />
+          <StationsTable />
+        </>
+      )}
+
+      {activeTab === "dispenser" && (
+        <>
+          <AddDispenserModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+          />
+          <DispensersTable />
+        </>
+      )}
+
+      {activeTab === "compressor" && (
+        <>
+          <AddCompressorModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+          />
+          <CompressorsTable />
+        </>
+      )}
+
+      {activeTab === "nozzle" && (
+        <>
+          <AddNozzleModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+          />
+          <NozzlesTable />
+        </>
+      )}
+
       <div className="w-[1200px] ml-auto mr-auto">
         <button
           onClick={() => {
@@ -53,34 +97,6 @@ export default function DashboardHeader() {
           <span>ADD NEW</span>
         </button>
       </div>
-
-      {activeTab === "stations" && (
-        <AddStationModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-        />
-      )}
-
-      {activeTab === "dispenser" && (
-        <AddDispenserModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-        />
-      )}
-
-      {activeTab === "compressor" && (
-        <AddCompressorModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-        />
-      )}
-
-      {activeTab === "nozzle" && (
-        <AddNozzleModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-        />
-      )}
     </div>
   );
 }
