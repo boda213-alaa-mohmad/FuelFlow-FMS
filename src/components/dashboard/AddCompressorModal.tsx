@@ -1,17 +1,48 @@
 "use client";
-
 import AddButton from "./AddButtonModal";
+import { useState } from "react";
 
 interface AddCompressorModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSave: (newCompressor: NewCompressor) => void;
+}
+
+export interface NewCompressor {
+  name: string;
+  channelId: string;
+  station: string;
 }
 
 export default function AddCompressorModal({
   isOpen,
   onClose,
+  onSave,
 }: AddCompressorModalProps) {
-  if (!isOpen) return null;
+  // if (!isOpen) return null;
+  const [newCompressor, setNewCompressor] = useState<NewCompressor>({
+    channelId: "",
+    name: "",
+    station: "",
+  });
+
+  function handleSaveData() {
+    if (
+      !newCompressor.channelId ||
+      !newCompressor.name ||
+      !newCompressor.station
+    ) {
+      alert("you have to enter all of fields");
+      return;
+    }
+
+    onSave(newCompressor);
+    setNewCompressor({
+      channelId: "",
+      name: "",
+      station: "",
+    });
+  }
 
   return (
     <AddButton
@@ -19,6 +50,7 @@ export default function AddCompressorModal({
       label="compressor"
       isOpen={isOpen}
       onClose={onClose}
+      onSave={handleSaveData}
     >
       <div className="py-6 space-y-5">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -30,6 +62,13 @@ export default function AddCompressorModal({
               type="text"
               placeholder="Placeholder ..."
               className="w-full bg-white border border-gray-300 rounded-xl py-3 px-4 text-sm text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400/20 focus:border-blue-400"
+              value={newCompressor.name}
+              onChange={(e) =>
+                setNewCompressor({
+                  ...newCompressor,
+                  name: e.target.value,
+                })
+              }
             />
           </div>
           <div>
@@ -40,6 +79,13 @@ export default function AddCompressorModal({
               type="text"
               placeholder="Placeholder ..."
               className="w-full bg-white border border-gray-300 rounded-xl py-3 px-4 text-sm text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400/20 focus:border-blue-400"
+              value={newCompressor.channelId}
+              onChange={(e) =>
+                setNewCompressor({
+                  ...newCompressor,
+                  channelId: e.target.value,
+                })
+              }
             />
           </div>
         </div>
@@ -50,8 +96,17 @@ export default function AddCompressorModal({
               Station
             </label>
             <div className="relative">
-              <select className="w-full appearance-none bg-white border border-gray-300 rounded-xl py-3 px-4 pr-10 text-sm text-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400/20 focus:border-blue-400 cursor-pointer">
-                <option value="" disabled selected>
+              <select
+                className="w-full appearance-none bg-white border border-gray-300 rounded-xl py-3 px-4 pr-10 text-sm text-slate-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400/20 focus:border-blue-400 cursor-pointer"
+                value={newCompressor.station}
+                onChange={(e) =>
+                  setNewCompressor({
+                    ...newCompressor,
+                    station: e.target.value,
+                  })
+                }
+              >
+                <option value="" disabled>
                   Placeholder ...
                 </option>
                 <option value="station1">Station 1</option>

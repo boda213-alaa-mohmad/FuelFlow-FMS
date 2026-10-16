@@ -1,0 +1,60 @@
+import { NozzleItem } from "@/types/nozzle";
+
+export const mockNozzles: NozzleItem[] = [
+  {
+    id: "1",
+    name: "Cairo Main Nozzle 1",
+    channelId: "3001",
+    station: "Cairo Main Branch",
+    dispenser: "Cairo Main Dispenser 1",
+    status: "active",
+  },
+  {
+    id: "2",
+    name: "Cairo Main Nozzle 2",
+    channelId: "3002",
+    station: "Cairo Main Branch",
+    dispenser: "Cairo Main Dispenser 1",
+    status: "active",
+  },
+  {
+    id: "3",
+    name: "Cairo Main Nozzle 3",
+    channelId: "3003",
+    station: "Cairo Main Branch",
+    dispenser: "Cairo Main Dispenser 2",
+    status: "inactive",
+  },
+  {
+    id: "4",
+    name: "Cairo Main Nozzle 4",
+    channelId: "3004",
+    station: "Cairo Main Branch",
+    dispenser: "Cairo Main Dispenser 3",
+    status: "active",
+  },
+  {
+    id: "5",
+    name: "Alexandria Nozzle 1",
+    channelId: "3005",
+    station: "Alexandria Branch",
+    dispenser: "Alexandria Dispenser 1",
+    status: "active",
+  },
+  {
+    id: "6",
+    name: "Alexandria Nozzle 2",
+    channelId: "3006",
+    station: "Alexandria Branch",
+    dispenser: "Alexandria Dispenser 1",
+    status: "inactive",
+  },
+  {
+    id: "7",
+    name: "Alexandria Nozzle 3",
+    channelId: "3007",
+    station: "Alexandria Branch",
+    dispenser: "Alexandria Dispenser 2",
+    status: "active",
+  },
+];

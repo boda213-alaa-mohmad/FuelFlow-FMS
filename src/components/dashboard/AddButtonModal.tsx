@@ -1,7 +1,7 @@
+"use client";
+
 import Image from "next/image";
 import { X } from "lucide-react";
-
-// ? this is shared component between 4 cards
 
 interface CardType {
   icon: string;
@@ -9,6 +9,7 @@ interface CardType {
   children: React.ReactNode;
   isOpen: boolean;
   onClose: () => void;
+  onSave: () => void;
 }
 
 export default function AddButton({
@@ -17,8 +18,10 @@ export default function AddButton({
   children,
   isOpen,
   onClose,
+  onSave,
 }: CardType) {
-  if (isOpen === false) return null;
+  if (!isOpen) return null;
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-700/70 p-4">
       <div className="w-full max-w-4xl rounded-2xl bg-white p-6 shadow-xl md:p-8">
@@ -26,15 +29,17 @@ export default function AddButton({
           <div className="flex items-center gap-3">
             <Image
               src={`/icons/${icon}.png`}
-              alt="Station Icon"
+              alt={`${label} icon`}
               width={32}
               height={32}
             />
-            <h2 className="font-bold text-slate-700 text-lg">{label}</h2>
+            <h2 className="text-lg font-bold text-slate-700">{label}</h2>
           </div>
+
           <button
+            type="button"
             onClick={onClose}
-            className="cursor-pointer text-slate-400 hover:text-slate-600 p-1"
+            className="cursor-pointer p-1 text-slate-400 hover:text-slate-600"
           >
             <X size={22} />
           </button>
@@ -42,20 +47,22 @@ export default function AddButton({
 
         {children}
 
-        <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+        <div className="flex justify-end gap-3 border-t border-gray-100 pt-4">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-xl border border-[#FF7A59] px-8 py-2.5 text-[#FF7A59] font-medium hover:bg-orange-50 cursor-pointer transition-colors"
+            className="cursor-pointer rounded-xl border border-[#FF7A59] px-8 py-2.5 font-medium text-[#FF7A59] transition-colors hover:bg-orange-50"
           >
             Cancel
           </button>
+
           <button
             type="button"
-            className="flex items-center gap-2 rounded-xl bg-[#FF7A59] px-8 py-2.5 text-white font-medium shadow-sm hover:bg-[#ff653c] cursor-pointer transition-colors"
+            onClick={onSave}
+            className="flex cursor-pointer items-center gap-2 rounded-xl bg-[#FF7A59] px-8 py-2.5 font-medium text-white shadow-sm transition-colors hover:bg-[#ff653c]"
           >
             <svg
-              className="w-4 h-4"
+              className="h-4 w-4"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
