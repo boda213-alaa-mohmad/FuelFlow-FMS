@@ -13,13 +13,13 @@ export default function PreferencesCard() {
         <div className="flex bg-slate-100 p-1 rounded-xl w-fit">
           <button
             type="button"
-            className="px-4 py-1.5 text-xs font-medium rounded-lg bg-white text-slate-800 shadow-sm"
+            className="px-4 py-1.5 text-xs font-medium rounded-lg bg-white text-slate-800 shadow-sm cursor-pointer"
           >
             ☀️ Light Mode
           </button>
           <button
             type="button"
-            className="px-4 py-1.5 text-xs font-medium rounded-lg text-slate-500"
+            className="px-4 py-1.5 text-xs font-medium rounded-lg text-slate-500 cursor-pointer"
           >
             🌙 Dark Mode
           </button>
