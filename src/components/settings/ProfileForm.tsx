@@ -60,14 +60,20 @@ export default function ProfileForm({ user }: ProfileFormProps) {
 
           <button
             type="button"
-            onClick={() => setIsOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-600 text-sm font-medium rounded-xl hover:bg-slate-200 transition cursor-pointer"
+            disabled={file === undefined}
+            onClick={() => {
+              setIsOpen(true);
+            }}
+            className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-xl transition ${
+              file
+                ? "bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer"
+                : "bg-slate-50 text-slate-300 cursor-not-allowed border border-slate-100"
+            }`}
           >
             <Trash2 className="w-4 h-4 text-slate-500" />
             Delete Avatar
           </button>
         </div>
-
       </div>
 
       <div className="space-y-4 pt-2 border-t border-slate-100">
@@ -75,16 +81,16 @@ export default function ProfileForm({ user }: ProfileFormProps) {
           <span className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-0.5">
             Full Name
           </span>
-          <p className="text-base font-semibold text-slate-800">{user.fullName}</p>
+          <p className="text-base font-semibold text-slate-800">
+            {user.fullName}
+          </p>
         </div>
 
         <div>
           <span className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-0.5">
             Email Address
           </span>
-          <p className="text-base font-semibold text-slate-800">
-            {user.email}
-          </p>
+          <p className="text-base font-semibold text-slate-800">{user.email}</p>
         </div>
       </div>
 
