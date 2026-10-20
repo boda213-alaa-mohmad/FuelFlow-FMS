@@ -5,7 +5,14 @@ import { useRef, useState } from "react";
 import { Upload, Trash2 } from "lucide-react";
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
 
-export default function ProfileForm() {
+interface ProfileFormProps {
+  user: {
+    email: string;
+    fullName: string;
+  };
+}
+
+export default function ProfileForm({ user }: ProfileFormProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | undefined>(undefined);
   const [isOpen, setIsOpen] = useState(false);
@@ -60,7 +67,7 @@ export default function ProfileForm() {
             Delete Avatar
           </button>
         </div>
-        {/* <button onClick={test}>test</button> */}
+
       </div>
 
       <div className="space-y-4 pt-2 border-t border-slate-100">
@@ -68,7 +75,7 @@ export default function ProfileForm() {
           <span className="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-0.5">
             Full Name
           </span>
-          <p className="text-base font-semibold text-slate-800">John Doe</p>
+          <p className="text-base font-semibold text-slate-800">{user.fullName}</p>
         </div>
 
         <div>
@@ -76,7 +83,7 @@ export default function ProfileForm() {
             Email Address
           </span>
           <p className="text-base font-semibold text-slate-800">
-            john.doe@example.com
+            {user.email}
           </p>
         </div>
       </div>

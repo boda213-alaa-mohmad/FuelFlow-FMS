@@ -30,10 +30,19 @@ export async function loginAction(prevState: unknown, formData: FormData) {
     // ? for security
     sameSite: "lax",
   });
+  (await cookies()).set("user_email", adminUser.email, {
+    httpOnly: true,
+    path: "/",
+  });
+
+  (await cookies()).set("user_name", adminUser.fullName, {
+    httpOnly: true,
+    path: "/",
+  });
+
   redirect("/dashboard");
 }
 
-
-// no you don't understand me look 
+// no you don't understand me look
 // if I submit 1 time second time and the third I will not understand
 // I want disable button submit and give toaster message to user to wait a one minute
