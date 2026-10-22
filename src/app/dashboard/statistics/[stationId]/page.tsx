@@ -3,7 +3,8 @@
 import { useState } from "react";
 import StationHeader from "@/components/station/StationHeader";
 import FinanceTabContent from "@/components/station/finance/FinanceTabContent";
-// import OperationTabContent from "@/components/station/OperationTabContent";
+import OperationTabContent from "@/components/station/operation/OperationTabContent";
+
 
 export default function DynamicStationPage() {
   const [activeTab, setActiveTab] = useState<"finance" | "operation">(
@@ -39,7 +40,7 @@ export default function DynamicStationPage() {
         </div>
       </div>
 
-      <div>{activeTab === "finance" ? <FinanceTabContent /> : <></>}</div>
+      <div>{activeTab === "finance" ? <FinanceTabContent /> : <OperationTabContent />}</div>
     </div>
   );
 }

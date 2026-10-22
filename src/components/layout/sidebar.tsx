@@ -53,7 +53,10 @@ export default function Sidebar() {
       {/* meddle icons */}
       <div className="flex flex-col items-center gap-y-4 w-full px-4">
         {navItems.map((item, index) => {
-          const isActive = pathname === item.path;
+          const isActive =
+            item.path === "/dashboard"
+              ? pathname === "/dashboard"
+              : pathname === item.path || pathname.startsWith(`${item.path}/`);
           return (
             <Link
               key={index}
