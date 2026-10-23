@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { BarChart2, Layers, Radar } from "lucide-react";
+import { ChartRadarGridCircleNoLines } from "./OperationGraph";
 
 export default function OperationMainContent() {
   const [activeTab, setActiveTab] = useState<"compressor" | "dispenser">(
@@ -58,15 +59,7 @@ export default function OperationMainContent() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center pt-2">
-        <div className="flex flex-col items-center justify-center space-y-3 p-4 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
-          <div className="w-full h-56 flex flex-col items-center justify-center text-slate-400 space-y-2">
-            <Radar className="w-10 h-10 text-slate-300" />
-            <p className="text-xs font-medium">Hourly Radar Chart</p>
-          </div>
-          <span className="text-xs font-bold text-slate-700 uppercase tracking-widest">
-            HOURLY
-          </span>
-        </div>
+        <ChartRadarGridCircleNoLines />
 
         <div className="flex flex-col items-center justify-center space-y-3 p-4 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
           <div className="w-full h-56 flex items-end justify-center gap-6 pb-2">
