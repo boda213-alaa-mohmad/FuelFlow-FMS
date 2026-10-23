@@ -1,4 +1,5 @@
 import { Fuel } from "lucide-react";
+import { ChartRadarLinesOnly } from "./ChartRadarLines";
 
 export default function RightSidebarStats() {
   const stationsData = [
@@ -54,17 +55,15 @@ export default function RightSidebarStats() {
 
   return (
     <div className="space-y-4 w-full">
-      {/* 1. قسم Hourly Sales */}
       <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm space-y-3">
         <h4 className="text-sm font-bold text-slate-800 text-center">
           Hourly Sales
         </h4>
         <div className="w-full h-56 bg-slate-50 border border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center text-slate-400 space-y-2 p-4 text-center">
-          <p className="text-xs font-medium">radar graph (Radar Chart)</p>
+          <p className="text-xs font-medium"><ChartRadarLinesOnly /></p>
         </div>
       </div>
 
-      {/* 2. قسم Sales by Station (باستخدام Array Mapping) */}
       <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm space-y-4">
         <h4 className="text-sm font-bold text-slate-800">Sales by Station</h4>
 
@@ -81,7 +80,6 @@ export default function RightSidebarStats() {
                     : "bg-slate-50/60 border-slate-100 hover:bg-slate-100/80 hover:border-slate-200"
                 }`}
               >
-                {/* الصف العلوي: الأيقونة، الاسم، والقيمة أو الـ NM */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
                     <div
@@ -110,7 +108,6 @@ export default function RightSidebarStats() {
                   )}
                 </div>
 
-                {/* شريط التقدم (Progress Bar) */}
                 <div
                   className={`w-full h-1.5 rounded-full overflow-hidden ${
                     isActive ? "bg-orange-100/80" : "bg-slate-200"

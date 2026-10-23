@@ -1,7 +1,7 @@
 "use client";
 
-import { BarChart3 } from "lucide-react";
 import { useState } from "react";
+import { ChartAreaDefault } from "./areaGraph";
 
 export default function GraphChartSection() {
   const [activeTab, setActiveTab] = useState<
@@ -10,7 +10,6 @@ export default function GraphChartSection() {
 
   return (
     <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-6 w-full">
-
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-slate-100 pb-4 gap-4">
         <h4 className="text-xs font-bold text-slate-700 tracking-wider">
           STATIONS ACTIVATES OVERVIEW
@@ -34,14 +33,14 @@ export default function GraphChartSection() {
         </div>
       </div>
 
-      <div className="w-full h-80 bg-slate-50 border border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center text-slate-400 space-y-2 p-4 text-center">
-        <BarChart3 className="w-10 h-10 text-slate-300" />
-        <p className="text-sm font-medium">
-        graph (Main Bar/Line Chart)
-        </p>
-        <span className="text-xs text-slate-300">
-         active tab {activeTab}
-        </span>
+      <div className="w-full bg-slate-50/50 border border-dashed border-slate-200 rounded-2xl p-6">
+        <ChartAreaDefault />
+        <div className="mt-4 pt-3 border-t border-slate-200/60 text-right">
+          <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">
+            Active Tab:{" "}
+            <span className="text-[#FF7A59] font-bold">{activeTab}</span>
+          </span>
+        </div>
       </div>
     </div>
   );
