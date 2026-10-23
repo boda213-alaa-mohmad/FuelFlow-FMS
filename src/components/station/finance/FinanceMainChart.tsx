@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { LineChart, BarChart2, List } from "lucide-react";
+import { ChartLineInteractive } from "./financeMainGraph";
 
 export default function FinanceMainChart() {
   const [activeTab, setActiveTab] = useState<"sales" | "transaction" | "value">(
@@ -43,15 +44,10 @@ export default function FinanceMainChart() {
               <List size={14} />
             </button>
           </div>
-
-  
         </div>
       </div>
 
-      <div className="w-full h-72 bg-slate-50 border border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center text-slate-400 space-y-2 text-center p-4">
-        <LineChart className="w-10 h-10 text-slate-300" />
-        <p className="text-xs font-medium">Main Line Chart ({activeTab})</p>
-      </div>
+      <ChartLineInteractive />
     </div>
   );
 }

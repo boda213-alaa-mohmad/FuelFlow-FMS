@@ -7,28 +7,28 @@ export default function FinanceOverviewCards() {
       value: "71,028",
       unit: "EGP",
       icon: Wallet,
-      isHighlighted: true,
+
     },
     {
       title: "Total Sales",
       value: "20,000",
       unit: "m³",
       icon: Tag,
-      isHighlighted: false,
+
     },
     {
       title: "Avg Sales",
       value: "20,000",
       unit: "m³",
       icon: Tag,
-      isHighlighted: false,
+
     },
     {
       title: "Transaction Count",
       value: "1567",
       unit: "",
       icon: Repeat,
-      isHighlighted: false,
+ 
     },
   ];
 
@@ -39,11 +39,7 @@ export default function FinanceOverviewCards() {
         return (
           <div
             key={index}
-            className={`p-5 rounded-2xl border shadow-sm space-y-3 transition hover:shadow-md ${
-              card.isHighlighted
-                ? "bg-[#FDF2F0] border-orange-100"
-                : "bg-white border-gray-100"
-            }`}
+            className={`p-5 rounded-2xl border shadow-sm space-y-3 transition hover:shadow-md  bg-white border-gray-100 `}
           >
             <div className="flex items-baseline justify-between">
               <h3 className="text-2xl font-bold text-slate-800">
