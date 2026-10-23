@@ -1,4 +1,5 @@
 import { Fuel } from "lucide-react";
+import Link from "next/link";
 
 export default function RightSidebarStats() {
   const stationsData = [
@@ -54,7 +55,6 @@ export default function RightSidebarStats() {
 
   return (
     <div className="space-y-4 w-full">
-      {/* 1. قسم Hourly Sales */}
       <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm space-y-3">
         <h4 className="text-sm font-bold text-slate-800 text-center">
           Hourly Sales
@@ -64,7 +64,6 @@ export default function RightSidebarStats() {
         </div>
       </div>
 
-      {/* 2. قسم Sales by Station (باستخدام Array Mapping) */}
       <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm space-y-4">
         <h4 className="text-sm font-bold text-slate-800">Sales by Station</h4>
 
@@ -73,15 +72,15 @@ export default function RightSidebarStats() {
             const isActive = station.status === "active";
 
             return (
-              <div
+              <Link
                 key={station.id}
-                className={`p-3 rounded-xl border transition-all duration-200 cursor-pointer group space-y-2 ${
+                href={`/dashboard/statistics/${station.id}`}
+                className={`block p-3 rounded-xl border transition-all duration-200 cursor-pointer group space-y-2 ${
                   isActive
                     ? "bg-slate-50/60 border-slate-100 hover:bg-orange-50/50 hover:border-orange-200"
                     : "bg-slate-50/60 border-slate-100 hover:bg-slate-100/80 hover:border-slate-200"
                 }`}
               >
-                {/* الصف العلوي: الأيقونة، الاسم، والقيمة أو الـ NM */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
                     <div
@@ -110,7 +109,6 @@ export default function RightSidebarStats() {
                   )}
                 </div>
 
-                {/* شريط التقدم (Progress Bar) */}
                 <div
                   className={`w-full h-1.5 rounded-full overflow-hidden ${
                     isActive ? "bg-orange-100/80" : "bg-slate-200"
@@ -124,7 +122,7 @@ export default function RightSidebarStats() {
                     }`}
                   ></div>
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>

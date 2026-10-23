@@ -17,7 +17,6 @@ export default function StatsHeader() {
           </div>
         </div>
 
-        {/* Last Update */}
         <div className="flex items-center gap-3">
           <span className="w-2 h-2 rounded-full bg-[#FF7A59]"></span>
           <div className="flex items-center gap-2">
@@ -45,7 +44,6 @@ export default function StatsHeader() {
       </div>
 
       <div className="flex flex-wrap sm:flex-nowrap items-center gap-4 w-full xl:w-auto justify-center">
-        {/* Start Date */}
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <span className="w-2 h-2 bg-[#FF7A59] rounded-xs shrink-0"></span>
           <div className="relative flex-1 sm:w-44">
