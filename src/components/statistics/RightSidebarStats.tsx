@@ -1,5 +1,4 @@
 import { Fuel } from "lucide-react";
-import Link from "next/link";
 
 export default function RightSidebarStats() {
   const stationsData = [
@@ -60,7 +59,7 @@ export default function RightSidebarStats() {
           Hourly Sales
         </h4>
         <div className="w-full h-56 bg-slate-50 border border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center text-slate-400 space-y-2 p-4 text-center">
-          <p className="text-xs font-medium">radar graph (Radar Chart)</p>
+          <p className="text-xs font-medium"><ChartRadarLinesOnly /></p>
         </div>
       </div>
 
