@@ -6,7 +6,6 @@ export default function HourlySalesRadarWidget() {
       <h4 className="text-xs font-bold text-slate-800 text-center">
         Hourly Sales
       </h4>
-
       <ChartRadarDots />
     </div>
   );
