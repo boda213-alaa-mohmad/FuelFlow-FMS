@@ -5,8 +5,7 @@ import { useState } from "react";
 import { AlarmContent } from "@/components/notification/alarms/AlarmContent";
 import { NotificationHeader } from "@/components/notification/NotificationHeader";
 
-// todo: later
-// import { WarningContent } from "@/components/notification/warnings/WarningContent";
+import { WarningContent } from "@/components/notification/warnings/WarningContent";
 
 export default function NotificationsPage() {
   const [activeTab, setActiveTab] = useState<"alarms" | "warnings">("alarms");
@@ -24,13 +23,8 @@ export default function NotificationsPage() {
           <AlarmContent />
         </div>
       ) : (
-        <div className="bg-white p-12 rounded-2xl border border-slate-100 shadow-sm text-center text-slate-500">
-          <h3 className="text-lg font-bold text-slate-700">
-            Warnings View Content
-          </h3>
-          <p className="text-xs text-slate-400 mt-1">
-            later componet wanings will be
-          </p>
+        <div className=" p-12 rounded-2xl border  shadow-sm text-center text-slate-500">
+         <WarningContent />
         </div>
       )}
     </div>
