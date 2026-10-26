@@ -1,5 +1,5 @@
 "use client";
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
+import DashboardHeader from "@/components/elements/DashboardHeader";
 
 export default function Element() {
   return (
