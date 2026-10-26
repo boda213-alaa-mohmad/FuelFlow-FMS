@@ -1,6 +1,8 @@
 "use client";
 
-import { Fuel, MoreHorizontal } from "lucide-react";
+import { Fuel } from "lucide-react";
+import { DropDownOption } from "./DropDownOption";
+import { useState } from "react";
 
 export function ListViewComponent() {
   const stationsList = [
@@ -33,23 +35,30 @@ export function ListViewComponent() {
     },
   ];
 
+  const [stationsDelete, setStationDelete] = useState(stationsList);
+
+  function deleteItem(id: number) {
+    setStationDelete(
+      stationsDelete.filter((station) => {
+        return station.id !== id;
+      }),
+    );
+  }
+
   return (
-    <div className="w-full space-y-4 px-6 mt-10">
-      {stationsList.map((station) => (
+    <div className="w-full space-y-4 px-2">
+      {stationsDelete.map((station) => (
         <div
           key={station.id}
           className="bg-white px-6 py-5 rounded-2xl border border-slate-100 shadow-sm relative flex flex-col md:flex-row items-center justify-between gap-6 hover:shadow-md transition-all cursor-pointer w-full"
         >
-          {/* 3-Dots Action Button Positioned Top-Right */}
+          {/* Dropdown Menu Component Positioned Top-Right */}
           <div className="absolute top-3 right-4">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
+            <DropDownOption
+              onDelete={() => {
+                deleteItem(station.id);
               }}
-              className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition cursor-pointer"
-            >
-              <MoreHorizontal size={18} />
-            </button>
+            />
           </div>
 
           {/* Left Side: Status Indicator, Fuel Icon & Station Name */}
