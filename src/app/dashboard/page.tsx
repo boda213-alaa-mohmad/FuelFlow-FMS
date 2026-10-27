@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { ListViewComponent } from "@/components/dashboard/list/ListViewComponent";
 import { Fuel } from "lucide-react";
+import { MapViewComponent } from "@/components/dashboard/map/MapViewComponent";
 
 export default function DashboardPage() {
-  const [viewMode, setViewMode] = useState<"map" | "list">("list");
+  const [viewMode, setViewMode] = useState<"map" | "list">("map");
 
   return (
     <div className="space-y-6 w-full min-h-screen bg-slate-50/50 ">
@@ -84,7 +85,7 @@ export default function DashboardPage() {
       {/* Dynamic Content */}
       <div className="w-full">
         {viewMode === "map" ? (
-          <></>
+        <MapViewComponent />
         ) : (
           <ListViewComponent />
         )}
