@@ -14,8 +14,23 @@ interface ProfileFormProps {
 
 export default function ProfileForm({ user }: ProfileFormProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [file, setFile] = useState<File | undefined>(undefined);
+  const [file, setFile] = useState<string | undefined>(() => {
+    if (typeof window === "undefined") return undefined;
+    return localStorage.getItem("src-image") || undefined;
+  });
   const [isOpen, setIsOpen] = useState(false);
+
+  function handleFileChange(selectedFile?: File) {
+    if (selectedFile === undefined) return;
+
+    const fileReader = new FileReader();
+    fileReader.onload = () => {
+      const base64 = fileReader.result as string; // string
+      localStorage.setItem("src-image", base64);
+      setFile(base64);
+    };
+    fileReader.readAsDataURL(selectedFile);
+  }
 
   return (
     <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-6">
@@ -24,7 +39,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
       <div className="flex flex-col items-center sm:items-start gap-4">
         {file ? (
           <Image
-            src={URL.createObjectURL(file)}
+            src={file}
             alt="Avatar"
             width={120}
             height={120}
@@ -41,7 +56,9 @@ export default function ProfileForm({ user }: ProfileFormProps) {
         <div className="flex items-center gap-3">
           <button
             type="button"
-            onClick={() => fileInputRef.current?.click()}
+            onClick={() => {
+              fileInputRef.current?.click();
+            }}
             className="flex items-center gap-2 px-4 py-2 bg-[#2563eb] text-white text-sm font-medium rounded-xl hover:bg-blue-700 transition shadow-sm cursor-pointer"
           >
             <Upload className="w-4 h-4" />
@@ -54,7 +71,8 @@ export default function ProfileForm({ user }: ProfileFormProps) {
             className="hidden"
             accept="image/*"
             onChange={(e) => {
-              setFile(e.target.files?.[0]);
+              const chosenFile = e.target.files?.[0];
+              handleFileChange(chosenFile);
             }}
           />
 
@@ -98,6 +116,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
         <DeleteConfirmationModal
           onClose={() => setIsOpen(false)}
           onConfirm={() => {
+            localStorage.removeItem("src-image");
             setFile(undefined);
             setIsOpen(false);
           }}
