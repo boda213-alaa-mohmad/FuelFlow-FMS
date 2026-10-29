@@ -23,7 +23,7 @@ import { NozzleItem } from "@/types/nozzle";
 import { mockNozzles } from "@/data/mockNozzles";
 
 const TABS = [
-  { id: "station", label: "Stations", icon: "/icons/stationa.png" },
+  { id: "station", label: "Stations", icon: "/icons/station.png" },
   { id: "dispenser", label: "Dispenser", icon: "/icons/dispenser.png" },
   { id: "compressor", label: "Compressor", icon: "/icons/compressor.png" },
   { id: "nozzle", label: "Nozzle", icon: "/icons/nozzle.png" },
@@ -42,7 +42,7 @@ export default function DashboardHeader() {
   const [nozzles, setNozzles] = useState<NozzleItem[]>(mockNozzles);
   const [activeTab, setActiveTab] = useState<
     "station" | "dispenser" | "compressor" | "nozzle"
-  >();
+  >("station");
 
   useEffect(() => {
     const savedTab = localStorage.getItem("tab");

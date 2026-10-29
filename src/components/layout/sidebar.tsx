@@ -18,7 +18,7 @@ const navItems = [
   {
     name: "Elements",
     path: "/dashboard/elements",
-    icon: "/icons/element.png",
+    icon: "/icons/elements@2x.png",
   },
   {
     name: "Settings",
