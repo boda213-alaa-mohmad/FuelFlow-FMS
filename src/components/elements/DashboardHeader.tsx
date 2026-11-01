@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 
 import AddStationModal, { type NewStation } from "./AddStationModal";
-import AddDispenserModal from "./AddDispenserModal";
-import AddCompressorModal, { NewCompressor } from "./AddCompressorModal";
-import AddNozzleModal, { newNozzle } from "./AddNozzleModal";
+import AddDispenserModal, { type DispenserProps } from "./AddDispenserModal";
+import AddCompressorModal, { type NewCompressor } from "./AddCompressorModal";
+import AddNozzleModal, { type newNozzle } from "./AddNozzleModal";
 
 import StationsTable from "./tableStation";
 import DispensersTable from "./tableDispenser";
@@ -27,79 +27,93 @@ const TABS = [
   { id: "dispenser", label: "Dispenser", icon: "/icons/dispenser.png" },
   { id: "compressor", label: "Compressor", icon: "/icons/compressor.png" },
   { id: "nozzle", label: "Nozzle", icon: "/icons/nozzle.png" },
-];
+] as const;
 
+type TabId = (typeof TABS)[number]["id"];
 type Station = StationItem;
-type Dispenser = DispenserItem;
+type Dispenser = DispenserProps;
 
 export default function DashboardHeader() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [stations, setStations] = useState<Station[]>(mockStations);
-  const [dispensers, setDispensers] = useState<Dispenser[]>(mockDispensers);
+  const [dispensers, setDispensers] = useState<DispenserItem[]>(mockDispensers);
   const [compressors, setCompressors] =
     useState<CompressorItem[]>(mockCompressors);
-
   const [nozzles, setNozzles] = useState<NozzleItem[]>(mockNozzles);
-  const [activeTab, setActiveTab] = useState<
-    "station" | "dispenser" | "compressor" | "nozzle"
-  >("station");
 
+  const [activeTab, setActiveTab] = useState<TabId>("station");
+
+  // Restore the saved tab safely from localStorage
   useEffect(() => {
     const savedTab = localStorage.getItem("tab");
 
-    if (savedTab) {
-      setActiveTab(savedTab);
+    const isValidTab = TABS.some((tab) => tab.id === savedTab);
+
+    if (isValidTab) {
+      setActiveTab(savedTab as TabId);
     }
   }, []);
 
-  // ? for saving localStorage
-  function handleSaveLocalStorage(id: string) {
+  function handleSaveLocalStorage(id: TabId) {
     localStorage.setItem("tab", id);
   }
 
-  // * this is station section code
+  function handleTabChange(id: TabId) {
+    setActiveTab(id);
+    handleSaveLocalStorage(id);
+  }
+
+  // Stations
   function handleAddStation(newStation: NewStation) {
     const station: Station = {
       ...newStation,
       id: crypto.randomUUID(),
       status: "active",
     };
+
     setStations((previousStations) => [...previousStations, station]);
     setIsModalOpen(false);
   }
+
   function handleDeleteStation(id: string) {
     setStations((previousStations) =>
       previousStations.filter((station) => station.id !== id),
     );
   }
 
-  // ********************************************** //
-  // * this is dispenser section code
+  // Dispensers
   function handleAddDispenser(newDispenser: Dispenser) {
     const dispenser: DispenserItem = {
       ...newDispenser,
       id: crypto.randomUUID(),
       status: "active",
     };
+
     setDispensers((previousDispensers) => [...previousDispensers, dispenser]);
+
     setIsModalOpen(false);
   }
+
   function handleDeleteDispenser(id: string) {
     setDispensers((previousDispensers) =>
       previousDispensers.filter((dispenser) => dispenser.id !== id),
     );
   }
 
-  // ********************************************** //
-  // * this is comporessor section code
-
+  // Compressors
   function handleAddCompressor(newCompressor: NewCompressor) {
     const compressor: CompressorItem = {
       ...newCompressor,
       id: crypto.randomUUID(),
       status: "active",
     };
-    setCompressors([...compressors, compressor]);
+
+    setCompressors((previousCompressors) => [
+      ...previousCompressors,
+      compressor,
+    ]);
+
     setIsModalOpen(false);
   }
 
@@ -109,15 +123,15 @@ export default function DashboardHeader() {
     );
   }
 
-  // ********************************************** //
-  // * this is nozzle section code
-  function handleAddNozzle(newNozzle: newNozzle) {
+  // Nozzles
+  function handleAddNozzle(nozzleData: newNozzle) {
     const nozzle: NozzleItem = {
-      ...newNozzle,
+      ...nozzleData,
       id: crypto.randomUUID(),
       status: "active",
     };
-    setNozzles([...nozzles, nozzle]);
+
+    setNozzles((previousNozzles) => [...previousNozzles, nozzle]);
     setIsModalOpen(false);
   }
 
@@ -130,22 +144,26 @@ export default function DashboardHeader() {
   return (
     <div>
       {/* Dashboard tabs */}
-      <div className="flex justify-center gap-5">
+      <div className="flex flex-wrap justify-center gap-5">
         {TABS.map((tab) => {
           const isActive = activeTab === tab.id;
 
           return (
             <div
               key={tab.id}
+              role="button"
+              tabIndex={0}
               className={`flex h-[140px] w-[270px] cursor-pointer items-center justify-center gap-4 rounded-2xl p-4 transition-all duration-200 ${
                 isActive
                   ? "h-[170px] bg-[#FF7A59] text-white shadow-md"
                   : "bg-[#FBE8E2] text-[#2B3A4A]"
               }`}
-              onClick={() => {
-                setActiveTab(tab.id);
-
-                handleSaveLocalStorage(tab.id);
+              onClick={() => handleTabChange(tab.id)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  handleTabChange(tab.id);
+                }
               }}
             >
               <Image src={tab.icon} alt="" width={49} height={49} />
@@ -155,6 +173,7 @@ export default function DashboardHeader() {
         })}
       </div>
 
+      {/* Stations section */}
       {activeTab === "station" && (
         <>
           <AddStationModal
@@ -167,6 +186,7 @@ export default function DashboardHeader() {
         </>
       )}
 
+      {/* Dispensers section */}
       {activeTab === "dispenser" && (
         <>
           <AddDispenserModal
@@ -182,6 +202,7 @@ export default function DashboardHeader() {
         </>
       )}
 
+      {/* Compressors section */}
       {activeTab === "compressor" && (
         <>
           <AddCompressorModal
@@ -189,6 +210,7 @@ export default function DashboardHeader() {
             onClose={() => setIsModalOpen(false)}
             onSave={handleAddCompressor}
           />
+
           <CompressorsTable
             compressors={compressors}
             onDelete={handleDeleteCompressor}
@@ -196,8 +218,7 @@ export default function DashboardHeader() {
         </>
       )}
 
-      {/* ************************************** */}
-
+      {/* Nozzles section */}
       {activeTab === "nozzle" && (
         <>
           <AddNozzleModal
@@ -205,14 +226,15 @@ export default function DashboardHeader() {
             onClose={() => setIsModalOpen(false)}
             onSave={handleAddNozzle}
           />
+
           <NozzlesTable nozzles={nozzles} onDelete={handleDeleteNozzle} />
         </>
       )}
-      {/* ****************************** */}
 
       {/* Add button */}
       <div className="mx-auto w-full max-w-[1200px] px-4">
         <button
+          type="button"
           onClick={() => setIsModalOpen(true)}
           className="ml-auto mt-6 flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#FF7A59] px-6 py-3 font-medium text-white shadow-sm transition-all duration-200 hover:bg-[#ff653c]"
         >

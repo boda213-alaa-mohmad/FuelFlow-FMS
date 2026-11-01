@@ -1,7 +1,9 @@
 "use client";
 
 import * as React from "react";
+import { useContext } from "react";
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
+import { ThemeContext } from "../../../../context/ThemeContext";
 
 import {
   Card,
@@ -56,30 +58,59 @@ const chartData = [
 const chartConfig = {
   desktop: {
     label: "Desktop",
-    color: "#db816b",
+    color: "#ff7a59",
   },
 } satisfies ChartConfig;
 
 export function ChartLineInteractive() {
+  const { theme } = useContext(ThemeContext);
+  const isDark = theme === "dark";
+
   const total = React.useMemo(
     () => chartData.reduce((acc, curr) => acc + curr.desktop, 0),
     [],
   );
 
   return (
-    <Card className="py-4 sm:py-0">
-      <CardHeader className="flex flex-col items-stretch border-b p-0! sm:flex-row">
+    <Card
+      className={`py-4 sm:py-0 transition-colors duration-300 ${
+        isDark
+          ? "bg-[#0F172A] border-slate-800 text-white"
+          : "bg-white border-gray-100 text-slate-900"
+      }`}
+    >
+      <CardHeader
+        className={`flex flex-col items-stretch border-b p-0! sm:flex-row transition-colors duration-300 ${
+          isDark ? "border-slate-800" : "border-slate-100"
+        }`}
+      >
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 pb-3 sm:pb-0">
-          <CardTitle>Desktop Visitors</CardTitle>
-          <CardDescription>Daily visitors for May 2026</CardDescription>
+          <CardTitle className={isDark ? "text-white" : "text-slate-800"}>
+            Desktop Visitors
+          </CardTitle>
+          <CardDescription
+            className={isDark ? "text-slate-400" : "text-slate-500"}
+          >
+            Daily visitors for May 2026
+          </CardDescription>
         </div>
 
         <div className="flex">
-          <div className="flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left data-[active=true]:bg-muted/50 sm:border-t-0 sm:border-l sm:px-8 sm:py-6">
-            <span className="text-xs text-muted-foreground">
+          <div
+            className={`flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left sm:border-t-0 sm:border-l sm:px-8 sm:py-6 transition-colors duration-300 ${
+              isDark
+                ? "border-slate-800 bg-slate-800/20"
+                : "border-slate-100 bg-muted/50"
+            }`}
+          >
+            <span
+              className={`text-xs ${isDark ? "text-slate-400" : "text-muted-foreground"}`}
+            >
               {chartConfig.desktop.label}
             </span>
-            <span className="text-lg leading-none font-bold sm:text-3xl">
+            <span
+              className={`text-lg leading-none font-bold sm:text-3xl ${isDark ? "text-white" : "text-slate-900"}`}
+            >
               {total.toLocaleString()}
             </span>
           </div>
@@ -99,7 +130,10 @@ export function ChartLineInteractive() {
               right: 12,
             }}
           >
-            <CartesianGrid vertical={false} />
+            <CartesianGrid
+              vertical={false}
+              stroke={isDark ? "#1E293B" : "#E2E8F0"}
+            />
 
             <XAxis
               dataKey="date"
@@ -107,6 +141,7 @@ export function ChartLineInteractive() {
               axisLine={false}
               tickMargin={8}
               minTickGap={32}
+              stroke={isDark ? "#94A3B8" : "#64748B"}
               tickFormatter={(value) => {
                 const date = new Date(`${value}T12:00:00`);
                 return date.toLocaleDateString("en-US", {

@@ -1,61 +1,69 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { MoreHorizontal } from "lucide-react";
+import { ThemeContext } from "../../../../context/ThemeContext";
 
 export function WarningOverallCard() {
+  const { theme } = useContext(ThemeContext);
+  const isDark = theme === "dark";
+
   const [activeTab, setActiveTab] = useState<
     "stationDetails" | "pressure" | "kpi" | "temperature"
   >("kpi");
 
   return (
-    <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm w-full space-y-6">
+    <div
+      className={`p-6 rounded-2xl border shadow-sm w-full space-y-6 transition-colors duration-300 ${
+        isDark
+          ? "bg-[#0F172A] border-slate-800 text-white"
+          : "bg-white border-slate-100 text-slate-900"
+      }`}
+    >
       {/* Top Tabs Bar */}
-      <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-        <div className="flex items-center gap-8 text-xs font-bold text-slate-400">
-          <button
-            onClick={() => setActiveTab("stationDetails")}
-            className={`transition cursor-pointer tracking-wider ${
-              activeTab === "stationDetails"
-                ? "text-slate-800 border-b-2 border-[#FF7A59] pb-3 -mb-3"
-                : "hover:text-slate-600"
-            }`}
-          >
-            STATION DETAILS
-          </button>
-          <button
-            onClick={() => setActiveTab("pressure")}
-            className={`transition cursor-pointer tracking-wider ${
-              activeTab === "pressure"
-                ? "text-slate-800 border-b-2 border-[#FF7A59] pb-3 -mb-3"
-                : "hover:text-slate-600"
-            }`}
-          >
-            PRESSURE
-          </button>
-          <button
-            onClick={() => setActiveTab("kpi")}
-            className={`transition cursor-pointer tracking-wider ${
-              activeTab === "kpi"
-                ? "text-slate-800 border-b-2 border-[#FF7A59] pb-3 -mb-3"
-                : "hover:text-slate-600"
-            }`}
-          >
-            KPI
-          </button>
-          <button
-            onClick={() => setActiveTab("temperature")}
-            className={`transition cursor-pointer tracking-wider ${
-              activeTab === "temperature"
-                ? "text-slate-800 border-b-2 border-[#FF7A59] pb-3 -mb-3"
-                : "hover:text-slate-600"
-            }`}
-          >
-            TEMPERTURE
-          </button>
+      <div
+        className={`flex items-center justify-between border-b pb-3 transition-colors duration-300 ${
+          isDark ? "border-slate-800" : "border-slate-100"
+        }`}
+      >
+        <div
+          className={`flex items-center gap-8 text-xs font-bold ${
+            isDark ? "text-slate-400" : "text-slate-400"
+          }`}
+        >
+          {(
+            [
+              { key: "stationDetails", label: "STATION DETAILS" },
+              { key: "pressure", label: "PRESSURE" },
+              { key: "kpi", label: "KPI" },
+              { key: "temperature", label: "TEMPERTURE" },
+            ] as const
+          ).map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`transition cursor-pointer tracking-wider ${
+                activeTab === tab.key
+                  ? `${
+                      isDark ? "text-white" : "text-slate-800"
+                    } border-b-2 border-[#FF7A59] pb-3 -mb-3`
+                  : isDark
+                    ? "hover:text-slate-200"
+                    : "hover:text-slate-600"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
 
-        <button className="text-slate-400 hover:text-slate-600 cursor-pointer p-1">
+        <button
+          className={`cursor-pointer p-1 transition ${
+            isDark
+              ? "text-slate-400 hover:text-white"
+              : "text-slate-400 hover:text-slate-600"
+          }`}
+        >
           <MoreHorizontal size={20} />
         </button>
       </div>
@@ -71,7 +79,7 @@ export function WarningOverallCard() {
               viewBox="0 0 36 36"
             >
               <path
-                className="text-orange-100"
+                className={isDark ? "text-slate-800" : "text-orange-100"}
                 strokeWidth="3.8"
                 stroke="currentColor"
                 fill="none"
@@ -88,26 +96,56 @@ export function WarningOverallCard() {
               />
             </svg>
             <div className="absolute flex flex-col items-center justify-center text-center">
-              <span className="text-2xl font-bold text-slate-800">86%</span>
+              <span
+                className={`text-2xl font-bold ${
+                  isDark ? "text-white" : "text-slate-800"
+                }`}
+              >
+                86%
+              </span>
             </div>
           </div>
-          <span className="text-sm font-bold text-slate-700 mt-2 tracking-wide">
+          <span
+            className={`text-sm font-bold mt-2 tracking-wide ${
+              isDark ? "text-slate-200" : "text-slate-700"
+            }`}
+          >
             CT / RT
           </span>
         </div>
 
         {/* Middle: Total Working Time */}
         <div className="flex flex-col items-center justify-center text-center">
-          <span className="text-2xl font-bold text-slate-800">4322</span>
-          <span className="text-xs font-bold text-slate-500 mt-1">
+          <span
+            className={`text-2xl font-bold ${
+              isDark ? "text-white" : "text-slate-800"
+            }`}
+          >
+            4322
+          </span>
+          <span
+            className={`text-xs font-bold mt-1 ${
+              isDark ? "text-slate-400" : "text-slate-500"
+            }`}
+          >
             Total working Time
           </span>
         </div>
 
         {/* Right: Total Power On Time */}
         <div className="flex flex-col items-center justify-center text-center">
-          <span className="text-2xl font-bold text-slate-800">5334</span>
-          <span className="text-xs font-bold text-slate-500 mt-1">
+          <span
+            className={`text-2xl font-bold ${
+              isDark ? "text-white" : "text-slate-800"
+            }`}
+          >
+            5334
+          </span>
+          <span
+            className={`text-xs font-bold mt-1 ${
+              isDark ? "text-slate-400" : "text-slate-500"
+            }`}
+          >
             Total Power On Time
           </span>
         </div>

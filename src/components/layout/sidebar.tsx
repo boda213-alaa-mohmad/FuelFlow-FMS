@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { logoutAction } from "@/auth/logoutAction";
+import { useContext } from "react";
+import { ThemeContext } from "../../../context/ThemeContext";
 
 const navItems = [
   {
@@ -34,9 +36,15 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { theme } = useContext(ThemeContext);
+  const isDark = theme === "dark";
 
   return (
-    <aside className="w-\[120px\] h-screen bg-[#FF7A59] flex flex-col items-center justify-between rounded-tr-[40px] py-8 shadow-lg">
+    <aside
+      className={`w-[120px] h-screen flex flex-col items-center justify-between py-8 shadow-lg transition-colors duration-300 ${
+        isDark ? "bg-[#0F172A] border-r border-slate-800" : "bg-[#FF7A59]"
+      }`}
+    >
       {/* upper icon */}
       <div className="cursor-pointer mb-4">
         <Link href="/dashboard">
@@ -50,7 +58,7 @@ export default function Sidebar() {
         </Link>
       </div>
 
-      {/* meddle icons */}
+      {/* middle icons */}
       <div className="flex flex-col items-center gap-y-4 w-full px-4">
         {navItems.map((item, index) => {
           const isActive =
@@ -84,7 +92,10 @@ export default function Sidebar() {
       {/* lower icon */}
       <div className="cursor-pointer p-3 hover:bg-white/10 rounded-2xl transition-all">
         <form action={logoutAction}>
-          <button type="submit" className="flex items-center justify-center">
+          <button
+            type="submit"
+            className="flex items-center justify-center cursor-pointer"
+          >
             <Image
               src="/icons/logout.png"
               alt="logout icon"

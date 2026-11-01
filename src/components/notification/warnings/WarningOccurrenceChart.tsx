@@ -1,8 +1,13 @@
 "use client";
 
+import { useContext } from "react";
 import { MoreHorizontal } from "lucide-react";
+import { ThemeContext } from "../../../../context/ThemeContext";
 
 export function WarningOccurrenceChart() {
+  const { theme } = useContext(ThemeContext);
+  const isDark = theme === "dark";
+
   const chartData = [
     { label: "Class Dummy Name", value: 20, color: "bg-indigo-900" },
     { label: "Class Dummy Name", value: 55, color: "bg-amber-400" },
@@ -19,25 +24,65 @@ export function WarningOccurrenceChart() {
   ];
 
   return (
-    <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm w-full space-y-6">
+    <div
+      className={`p-6 rounded-2xl border shadow-sm w-full space-y-6 transition-colors duration-300 ${
+        isDark
+          ? "bg-[#0F172A] border-slate-800 text-white"
+          : "bg-white border-slate-100 text-slate-900"
+      }`}
+    >
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-        <h3 className="text-sm font-bold text-slate-800 tracking-wider">
+      <div
+        className={`flex items-center justify-between border-b pb-4 transition-colors duration-300 ${
+          isDark ? "border-slate-800" : "border-slate-100"
+        }`}
+      >
+        <h3
+          className={`text-sm font-bold tracking-wider ${
+            isDark ? "text-white" : "text-slate-800"
+          }`}
+        >
           WARNING CLASSIFICATION
         </h3>
-        <button className="text-slate-400 hover:text-slate-600 cursor-pointer p-1">
+        <button
+          className={`cursor-pointer p-1 transition ${
+            isDark
+              ? "text-slate-400 hover:text-white"
+              : "text-slate-400 hover:text-slate-600"
+          }`}
+        >
           <MoreHorizontal size={20} />
         </button>
       </div>
 
       {/* Chart Body */}
-      <div className="relative h-64 w-full flex items-end justify-between gap-2 pt-6 px-2 border-b border-slate-200">
+      <div
+        className={`relative h-64 w-full flex items-end justify-between gap-2 pt-6 px-2 border-b transition-colors duration-300 ${
+          isDark ? "border-slate-800" : "border-slate-200"
+        }`}
+      >
         {/* Horizontal grid lines */}
         <div className="absolute inset-0 flex flex-col justify-between pointer-events-none pb-8">
-          <div className="w-full border-b border-slate-100 border-dashed"></div>
-          <div className="w-full border-b border-slate-100 border-dashed"></div>
-          <div className="w-full border-b border-slate-100 border-dashed"></div>
-          <div className="w-full border-b border-slate-100 border-dashed"></div>
+          <div
+            className={`w-full border-b border-dashed ${
+              isDark ? "border-slate-800" : "border-slate-100"
+            }`}
+          ></div>
+          <div
+            className={`w-full border-b border-dashed ${
+              isDark ? "border-slate-800" : "border-slate-100"
+            }`}
+          ></div>
+          <div
+            className={`w-full border-b border-dashed ${
+              isDark ? "border-slate-800" : "border-slate-100"
+            }`}
+          ></div>
+          <div
+            className={`w-full border-b border-dashed ${
+              isDark ? "border-slate-800" : "border-slate-100"
+            }`}
+          ></div>
         </div>
 
         {/* Y-Axis labels */}
@@ -59,7 +104,11 @@ export function WarningOccurrenceChart() {
               className="flex-1 flex flex-col items-center h-full justify-end relative group z-10"
             >
               {/* Tooltip on hover */}
-              <div className="absolute -top-8 bg-slate-800 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap shadow-md">
+              <div
+                className={`absolute -top-8 text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap shadow-md ${
+                  isDark ? "bg-slate-700 text-white" : "bg-slate-800 text-white"
+                }`}
+              >
                 {item.value}
               </div>
 
@@ -77,7 +126,11 @@ export function WarningOccurrenceChart() {
       <div className="flex items-center justify-between gap-2 px-2 text-center">
         {chartData.map((item, index) => (
           <div key={index} className="flex-1 truncate">
-            <span className="text-[9px] text-slate-400 block truncate leading-tight">
+            <span
+              className={`text-[9px] block truncate leading-tight ${
+                isDark ? "text-slate-400" : "text-slate-400"
+              }`}
+            >
               {item.label}
             </span>
           </div>

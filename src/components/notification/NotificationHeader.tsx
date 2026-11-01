@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -11,6 +11,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { ThemeContext } from "../../../context/ThemeContext";
 
 interface AlarmHeaderProps {
   onBack?: () => void;
@@ -23,6 +24,9 @@ export function NotificationHeader({
   activeTab,
   onTabChange,
 }: AlarmHeaderProps) {
+  const { theme } = useContext(ThemeContext);
+  const isDark = theme === "dark";
+
   const [dateRange, setDateRange] = useState<
     "today" | "yesterday" | "lastWeek"
   >("today");
@@ -30,12 +34,26 @@ export function NotificationHeader({
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 
   return (
-    <div className="bg-white pt-6 px-6 rounded-2xl border border-gray-100 shadow-sm space-y-6 w-full overflow-hidden">
+    <div
+      className={`pt-6 px-6 rounded-2xl border shadow-sm space-y-6 w-full overflow-hidden transition-colors duration-300 ${
+        isDark
+          ? "bg-[#0F172A] border-slate-800 text-white"
+          : "bg-white border-gray-100 text-slate-900"
+      }`}
+    >
       {/* Top Bar: Title & Back Button */}
-      <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+      <div
+        className={`flex items-center justify-between border-b pb-4 transition-colors duration-300 ${
+          isDark ? "border-slate-800" : "border-slate-100"
+        }`}
+      >
         <div className="flex items-center gap-3">
           <span className="w-3 h-3 rounded-full bg-[#FF7A59] animate-pulse"></span>
-          <h1 className="text-xl font-bold text-slate-800 tracking-wide">
+          <h1
+            className={`text-xl font-bold tracking-wide ${
+              isDark ? "text-white" : "text-slate-800"
+            }`}
+          >
             Alarm ID
           </h1>
         </div>
@@ -54,7 +72,13 @@ export function NotificationHeader({
         {/* Monitored Stations & Last Update Info */}
         <div className="flex items-center gap-8 text-sm">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 bg-orange-50 text-[#FF7A59] rounded-xl">
+            <div
+              className={`p-2 rounded-xl ${
+                isDark
+                  ? "bg-orange-500/10 text-[#FF7A59]"
+                  : "bg-orange-50 text-[#FF7A59]"
+              }`}
+            >
               <svg
                 width="18"
                 height="18"
@@ -70,15 +94,35 @@ export function NotificationHeader({
               </svg>
             </div>
             <div>
-              <span className="text-lg font-bold text-slate-800">2/3</span>
-              <span className="text-xs text-slate-400 ml-1.5">
+              <span
+                className={`text-lg font-bold ${
+                  isDark ? "text-white" : "text-slate-800"
+                }`}
+              >
+                2/3
+              </span>
+              <span
+                className={`text-xs ml-1.5 ${
+                  isDark ? "text-slate-400" : "text-slate-400"
+                }`}
+              >
                 Monitored Stations
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2.5 border-l border-slate-200 pl-8">
-            <div className="p-2 bg-slate-50 text-slate-600 rounded-xl">
+          <div
+            className={`flex items-center gap-2.5 border-l pl-8 ${
+              isDark ? "border-slate-800" : "border-slate-200"
+            }`}
+          >
+            <div
+              className={`p-2 rounded-xl ${
+                isDark
+                  ? "bg-slate-800 text-slate-300"
+                  : "bg-slate-50 text-slate-600"
+              }`}
+            >
               <svg
                 width="18"
                 height="18"
@@ -91,20 +135,32 @@ export function NotificationHeader({
               </svg>
             </div>
             <div>
-              <span className="text-lg font-bold text-slate-800">20s</span>
+              <span
+                className={`text-lg font-bold ${
+                  isDark ? "text-white" : "text-slate-800"
+                }`}
+              >
+                20s
+              </span>
               <span className="text-xs text-slate-400 ml-1.5">Last Update</span>
             </div>
           </div>
         </div>
 
         {/* Quick Date Filters (Today, Yesterday, Last Week) */}
-        <div className="flex items-center bg-slate-100 p-1.5 rounded-full shadow-inner">
+        <div
+          className={`flex items-center p-1.5 rounded-full shadow-inner transition-colors duration-300 ${
+            isDark ? "bg-slate-800/80" : "bg-slate-100"
+          }`}
+        >
           <button
             onClick={() => setDateRange("today")}
             className={`px-5 py-1.5 rounded-full text-xs font-bold transition cursor-pointer ${
               dateRange === "today"
                 ? "bg-[#FF7A59] text-white shadow-xs"
-                : "text-slate-600 hover:text-slate-900"
+                : isDark
+                  ? "text-slate-400 hover:text-white"
+                  : "text-slate-600 hover:text-slate-900"
             }`}
           >
             TODAY
@@ -114,7 +170,9 @@ export function NotificationHeader({
             className={`px-5 py-1.5 rounded-full text-xs font-bold transition cursor-pointer ${
               dateRange === "yesterday"
                 ? "bg-[#FF7A59] text-white shadow-xs"
-                : "text-slate-600 hover:text-slate-900"
+                : isDark
+                  ? "text-slate-400 hover:text-white"
+                  : "text-slate-600 hover:text-slate-900"
             }`}
           >
             YESTERDAY
@@ -124,7 +182,9 @@ export function NotificationHeader({
             className={`px-5 py-1.5 rounded-full text-xs font-bold transition cursor-pointer ${
               dateRange === "lastWeek"
                 ? "bg-[#FF7A59] text-white shadow-xs"
-                : "text-slate-600 hover:text-slate-900"
+                : isDark
+                  ? "text-slate-400 hover:text-white"
+                  : "text-slate-600 hover:text-slate-900"
             }`}
           >
             LAST WEEK
@@ -140,12 +200,20 @@ export function NotificationHeader({
               <PopoverTrigger asChild>
                 <button
                   className={cn(
-                    "relative w-[190px] text-left bg-transparent border-b border-slate-300 pb-1 text-xs text-slate-700 focus:outline-none flex items-center justify-between cursor-pointer hover:border-slate-400 transition",
-                    !startDate && "text-slate-400",
+                    "relative w-[190px] text-left bg-transparent border-b pb-1 text-xs focus:outline-none flex items-center justify-between cursor-pointer transition",
+                    isDark
+                      ? "border-slate-700 text-slate-200 hover:border-slate-500"
+                      : "border-slate-300 text-slate-700 hover:border-slate-400",
+                    !startDate &&
+                      (isDark ? "text-slate-500" : "text-slate-400"),
                   )}
                 >
                   <span className="truncate">
-                    <strong className="text-slate-800 font-bold mr-1.5">
+                    <strong
+                      className={`font-bold mr-1.5 ${
+                        isDark ? "text-white" : "text-slate-800"
+                      }`}
+                    >
                       Start
                     </strong>
                     {startDate ? format(startDate, "PP") : "date - time"}
@@ -153,7 +221,14 @@ export function NotificationHeader({
                   <CalendarIcon className="w-4 h-4 text-slate-400 shrink-0" />
                 </button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
+              <PopoverContent
+                className={`w-auto p-0 border shadow-md ${
+                  isDark
+                    ? "bg-[#0F172A] border-slate-800 text-white"
+                    : "bg-white border-slate-200"
+                }`}
+                align="start"
+              >
                 <Calendar
                   mode="single"
                   selected={startDate}
@@ -170,12 +245,19 @@ export function NotificationHeader({
               <PopoverTrigger asChild>
                 <button
                   className={cn(
-                    "relative w-[190px] text-left bg-transparent border-b border-slate-300 pb-1 text-xs text-slate-700 focus:outline-none flex items-center justify-between cursor-pointer hover:border-slate-400 transition",
-                    !endDate && "text-slate-400",
+                    "relative w-[190px] text-left bg-transparent border-b pb-1 text-xs focus:outline-none flex items-center justify-between cursor-pointer transition",
+                    isDark
+                      ? "border-slate-700 text-slate-200 hover:border-slate-500"
+                      : "border-slate-300 text-slate-700 hover:border-slate-400",
+                    !endDate && (isDark ? "text-slate-500" : "text-slate-400"),
                   )}
                 >
                   <span className="truncate">
-                    <strong className="text-slate-800 font-bold mr-1.5">
+                    <strong
+                      className={`font-bold mr-1.5 ${
+                        isDark ? "text-white" : "text-slate-800"
+                      }`}
+                    >
                       End
                     </strong>
                     {endDate ? format(endDate, "PP") : "date - time"}
@@ -183,7 +265,14 @@ export function NotificationHeader({
                   <CalendarIcon className="w-4 h-4 text-slate-400 shrink-0" />
                 </button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
+              <PopoverContent
+                className={`w-auto p-0 border shadow-md ${
+                  isDark
+                    ? "bg-[#0F172A] border-slate-800 text-white"
+                    : "bg-white border-slate-200"
+                }`}
+                align="start"
+              >
                 <Calendar
                   mode="single"
                   selected={endDate}
@@ -195,15 +284,23 @@ export function NotificationHeader({
         </div>
       </div>
 
-      {/* Alarms / Warnings Full Width Tabs Header Bar (Connected to parent state via props) */}
-      <div className="border-t border-slate-100 pt-0 mt-4 -mx-6">
+      {/* Alarms / Warnings Full Width Tabs Header Bar */}
+      <div
+        className={`border-t pt-0 mt-4 -mx-6 transition-colors duration-300 ${
+          isDark ? "border-slate-800" : "border-slate-100"
+        }`}
+      >
         <div className="grid grid-cols-2 w-full text-center font-bold text-sm">
           <button
             onClick={() => onTabChange("alarms")}
             className={`py-4 transition relative cursor-pointer tracking-wider ${
               activeTab === "alarms"
-                ? "text-slate-800 bg-white"
-                : "text-slate-400 hover:text-slate-600 bg-slate-50/50"
+                ? isDark
+                  ? "text-white bg-[#0F172A]"
+                  : "text-slate-800 bg-white"
+                : isDark
+                  ? "text-slate-400 hover:text-white bg-slate-900/40"
+                  : "text-slate-400 hover:text-slate-600 bg-slate-50/50"
             }`}
           >
             ALARMS
@@ -216,8 +313,12 @@ export function NotificationHeader({
             onClick={() => onTabChange("warnings")}
             className={`py-4 transition relative cursor-pointer tracking-wider ${
               activeTab === "warnings"
-                ? "text-slate-800 bg-white"
-                : "text-slate-400 hover:text-slate-600 bg-slate-50/50"
+                ? isDark
+                  ? "text-white bg-[#0F172A]"
+                  : "text-slate-800 bg-white"
+                : isDark
+                  ? "text-slate-400 hover:text-white bg-slate-900/40"
+                  : "text-slate-400 hover:text-slate-600 bg-slate-50/50"
             }`}
           >
             WARNINGS

@@ -1,13 +1,13 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
+import { useContext } from "react";
+import { ThemeContext } from "../../../../context/ThemeContext";
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts";
 
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -37,11 +37,24 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function ChartRadarDots() {
+  const { theme } = useContext(ThemeContext);
+  const isDark = theme === "dark";
+
   return (
-    <Card>
+    <Card
+      className={`transition-colors duration-300 ${
+        isDark
+          ? "bg-[#0F172A] border-slate-800 text-white"
+          : "bg-white border-gray-100 text-slate-900"
+      }`}
+    >
       <CardHeader className="items-center">
-        <CardTitle>Radar Chart - Dots</CardTitle>
-        <CardDescription>
+        <CardTitle className={isDark ? "text-white" : "text-slate-800"}>
+          Radar Chart - Dots
+        </CardTitle>
+        <CardDescription
+          className={isDark ? "text-slate-400" : "text-slate-500"}
+        >
           Showing total visitors for the last 6 months
         </CardDescription>
       </CardHeader>
@@ -52,8 +65,11 @@ export function ChartRadarDots() {
         >
           <RadarChart data={chartData}>
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-            <PolarAngleAxis dataKey="month" />
-            <PolarGrid />
+            <PolarAngleAxis
+              dataKey="month"
+              stroke={isDark ? "#94A3B8" : "#64748B"}
+            />
+            <PolarGrid stroke={isDark ? "#1E293B" : "#E2E8F0"} />
             <Radar
               dataKey="desktop"
               fill="var(--color-desktop)"
@@ -66,7 +82,6 @@ export function ChartRadarDots() {
           </RadarChart>
         </ChartContainer>
       </CardContent>
-  
     </Card>
   );
 }

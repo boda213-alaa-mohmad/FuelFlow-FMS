@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   PolarAngleAxis,
   PolarGrid,
@@ -8,6 +8,7 @@ import {
   RadarChart,
   ResponsiveContainer,
 } from "recharts";
+import { ThemeContext } from "../../../../context/ThemeContext";
 
 const hourlyData = [
   { hour: "24:00", value: 40 },
@@ -25,6 +26,9 @@ const hourlyData = [
 ];
 
 export function AlarmRightSidebar() {
+  const { theme } = useContext(ThemeContext);
+  const isDark = theme === "dark";
+
   const [activeTab, setActiveTab] = useState<"compressor" | "compression">(
     "compressor",
   );
@@ -37,15 +41,27 @@ export function AlarmRightSidebar() {
   ];
 
   return (
-    <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-8 w-full">
+    <div
+      className={`p-6 rounded-2xl border shadow-sm space-y-8 w-full transition-colors duration-300 ${
+        isDark
+          ? "bg-[#0F172A] border-slate-800 text-white"
+          : "bg-white border-slate-100 text-slate-900"
+      }`}
+    >
       {/* 1. Tabs Header */}
-      <div className="flex bg-[#F8F5F4] p-1 rounded-2xl">
+      <div
+        className={`flex p-1 rounded-2xl transition-colors duration-300 ${
+          isDark ? "bg-slate-800/80" : "bg-[#F8F5F4]"
+        }`}
+      >
         <button
           onClick={() => setActiveTab("compressor")}
           className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-bold transition cursor-pointer ${
             activeTab === "compressor"
               ? "bg-[#FF7A59] text-white shadow-sm"
-              : "text-slate-600 hover:text-slate-900"
+              : isDark
+                ? "text-slate-400 hover:text-white"
+                : "text-slate-600 hover:text-slate-900"
           }`}
         >
           <svg
@@ -67,7 +83,9 @@ export function AlarmRightSidebar() {
           className={`flex-1 flex items-center justify-center py-3 px-4 rounded-xl text-xs font-bold transition cursor-pointer ${
             activeTab === "compression"
               ? "bg-[#FF7A59] text-white shadow-sm"
-              : "text-slate-700 hover:text-slate-900"
+              : isDark
+                ? "text-slate-400 hover:text-white"
+                : "text-slate-700 hover:text-slate-900"
           }`}
         >
           Compression
@@ -80,9 +98,13 @@ export function AlarmRightSidebar() {
           {bars.map((bar, index) => (
             <div key={index} className="flex flex-col items-center gap-2">
               <div
-                className={`w-8 rounded-t-md ${bar.color} ${bar.height} transition-all duration-300`}
+                className={`w-8 rounded-t-md ${bar.color} ${bar.height} transition-all duration-300 shadow-sm`}
               ></div>
-              <span className="text-[11px] font-medium text-slate-500">
+              <span
+                className={`text-[11px] font-medium ${
+                  isDark ? "text-slate-400" : "text-slate-500"
+                }`}
+              >
                 {bar.label}
               </span>
             </div>
@@ -90,27 +112,38 @@ export function AlarmRightSidebar() {
         </div>
       </div>
 
-      <hr className="border-slate-100" />
+      <hr className={isDark ? "border-slate-800" : "border-slate-100"} />
 
       {/* 3. Hourly Occurrence Radar Chart */}
       <div className="space-y-4">
-        <h4 className="text-sm font-bold text-slate-800 text-center">
+        <h4
+          className={`text-sm font-bold text-center ${
+            isDark ? "text-white" : "text-slate-800"
+          }`}
+        >
           Hourly Occurrence
         </h4>
 
         <div className="w-full h-[260px] flex items-center justify-center">
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart data={hourlyData} outerRadius={80}>
-              <PolarGrid gridType="polygon" stroke="#cbd5e1" />
+              <PolarGrid
+                gridType="polygon"
+                stroke={isDark ? "#1E293B" : "#cbd5e1"}
+              />
               <PolarAngleAxis
                 dataKey="hour"
-                tick={{ fontSize: 10, fill: "#64748b", fontWeight: 500 }}
+                tick={{
+                  fontSize: 10,
+                  fill: isDark ? "#94A3B8" : "#64748b",
+                  fontWeight: 500,
+                }}
               />
               <Radar
                 dataKey="value"
                 stroke="transparent"
                 fill="#FF7A59"
-                fillOpacity={0.2}
+                fillOpacity={0.25}
                 dot={{
                   r: 5,
                   fill: "#DC2626",

@@ -1,5 +1,9 @@
+"use client";
+
+import { useContext } from "react";
 import { Fuel, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { ThemeContext } from "../../../context/ThemeContext";
 
 interface StationHeaderProps {
   stationName?: string;
@@ -8,13 +12,26 @@ interface StationHeaderProps {
 export default function StationHeader({
   stationName = "Station Name Compressor",
 }: StationHeaderProps) {
+  const { theme } = useContext(ThemeContext);
+  const isDark = theme === "dark";
+
   return (
-    <div className="bg-white px-6 py-4 rounded-2xl border border-gray-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 w-full">
+    <div
+      className={`px-6 py-4 rounded-2xl border shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 w-full transition-colors duration-300 ${
+        isDark
+          ? "bg-[#0F172A] border-slate-800 text-white"
+          : "bg-white border-gray-100 text-slate-900"
+      }`}
+    >
       <div className="flex items-center gap-3">
         <div className="text-[#FF7A59]">
           <Fuel size={28} />
         </div>
-        <h2 className="text-base sm:text-lg font-bold text-slate-800 tracking-wide">
+        <h2
+          className={`text-base sm:text-lg font-bold tracking-wide ${
+            isDark ? "text-white" : "text-slate-800"
+          }`}
+        >
           {stationName}
         </h2>
       </div>

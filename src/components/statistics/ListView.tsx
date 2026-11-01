@@ -1,11 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Fuel } from "lucide-react";
 import { DropDownOption } from "./DropDownOption";
 import { EmptyState } from "./EmptyState";
+import { ThemeContext } from "../../../context/ThemeContext";
 
 export default function ListViewSection() {
+  const { theme } = useContext(ThemeContext);
+  const isDark = theme === "dark";
+
   const stations = [
     { id: 1, name: "STATION NAME DUMMY", active: true },
     { id: 2, name: "STATION NAME DUMMY", active: true },
@@ -28,14 +32,22 @@ export default function ListViewSection() {
         stationLists.map((station) => (
           <div
             key={station.id}
-            className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-5 transition hover:shadow-md"
+            className={`p-6 rounded-2xl border shadow-sm space-y-5 transition hover:shadow-md w-full duration-300 ${
+              isDark
+                ? "bg-[#0F172A] border-slate-800 text-white"
+                : "bg-white border-gray-100 text-slate-900"
+            }`}
           >
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+            <div
+              className={`flex items-center justify-between border-b pb-4 transition-colors duration-300 ${
+                isDark ? "border-slate-800" : "border-slate-100"
+              }`}
+            >
               <div className="flex items-center gap-3">
                 <span
                   className={`w-2.5 h-2.5 rounded-full ${
-                    station.active ? "bg-[#FF7A59]" : "bg-slate-300"
+                    station.active ? "bg-[#FF7A59]" : "bg-slate-400"
                   }`}
                 ></span>
 
@@ -45,7 +57,11 @@ export default function ListViewSection() {
                   }`}
                 />
 
-                <h4 className="text-sm font-bold text-slate-800 tracking-wide">
+                <h4
+                  className={`text-sm font-bold tracking-wide ${
+                    isDark ? "text-white" : "text-slate-800"
+                  }`}
+                >
                   {station.name}
                 </h4>
               </div>
@@ -60,17 +76,38 @@ export default function ListViewSection() {
                   <span className="text-slate-400 font-medium">
                     Total Sales
                   </span>
-                  <span className="font-bold text-slate-800">
+                  <span
+                    className={`font-bold ${
+                      isDark ? "text-white" : "text-slate-800"
+                    }`}
+                  >
                     62,721{" "}
-                    <span className="font-normal text-slate-500">m³</span>
+                    <span
+                      className={`font-normal ${
+                        isDark ? "text-slate-400" : "text-slate-500"
+                      }`}
+                    >
+                      m³
+                    </span>
                   </span>
                 </div>
                 <div className="flex justify-between md:justify-start md:gap-8">
                   <span className="text-slate-400 font-medium">
                     Total Value
                   </span>
-                  <span className="font-bold text-slate-800">
-                    550 <span className="font-normal text-slate-500">EGP</span>
+                  <span
+                    className={`font-bold ${
+                      isDark ? "text-white" : "text-slate-800"
+                    }`}
+                  >
+                    550{" "}
+                    <span
+                      className={`font-normal ${
+                        isDark ? "text-slate-400" : "text-slate-500"
+                      }`}
+                    >
+                      EGP
+                    </span>
                   </span>
                 </div>
               </div>
@@ -80,13 +117,25 @@ export default function ListViewSection() {
                   <span className="text-slate-400 font-medium">
                     Compression State
                   </span>
-                  <span className="font-bold text-slate-800">Compression</span>
+                  <span
+                    className={`font-bold ${
+                      isDark ? "text-white" : "text-slate-800"
+                    }`}
+                  >
+                    Compression
+                  </span>
                 </div>
                 <div className="flex justify-between md:justify-start md:gap-8">
                   <span className="text-slate-400 font-medium">
                     Total Transaction Count
                   </span>
-                  <span className="font-bold text-slate-800">5161</span>
+                  <span
+                    className={`font-bold ${
+                      isDark ? "text-white" : "text-slate-800"
+                    }`}
+                  >
+                    5161
+                  </span>
                 </div>
               </div>
 
@@ -95,13 +144,23 @@ export default function ListViewSection() {
                   <span className="text-slate-400 font-medium">
                     Max Transaction / hour
                   </span>
-                  <span className="font-bold text-slate-800">20</span>
+                  <span
+                    className={`font-bold ${
+                      isDark ? "text-white" : "text-slate-800"
+                    }`}
+                  >
+                    20
+                  </span>
                 </div>
                 <div className="flex justify-between md:justify-start md:gap-8">
                   <span className="text-slate-400 font-medium">
                     Max Transaction Date-Time
                   </span>
-                  <span className="font-bold text-slate-800">
+                  <span
+                    className={`font-bold ${
+                      isDark ? "text-white" : "text-slate-800"
+                    }`}
+                  >
                     8-1-2021 | 10:16
                   </span>
                 </div>

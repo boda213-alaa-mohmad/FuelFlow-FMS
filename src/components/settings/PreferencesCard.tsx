@@ -1,43 +1,70 @@
+"use client";
+
+import { useContext } from "react";
+import { ThemeContext } from "../../../context/ThemeContext";
+
 export default function PreferencesCard() {
+  const themeUse = useContext(ThemeContext);
+  const isDark = themeUse.theme === "dark";
+
   return (
-    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-6">
-      <h2 className="text-lg font-semibold text-slate-800">
+    <div
+      className={`p-6 rounded-2xl border shadow-sm space-y-6 transition-colors duration-300 ${
+        isDark
+          ? "bg-[#0F172A] border-slate-800 text-white"
+          : "bg-white border-gray-100 text-slate-900"
+      }`}
+    >
+      <h2
+        className={`text-lg font-semibold ${
+          isDark ? "text-white" : "text-slate-800"
+        }`}
+      >
         Account Preferences
       </h2>
 
       {/* Theme Toggle */}
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-2">
+        <label
+          className={`block text-sm font-medium mb-2 ${
+            isDark ? "text-slate-300" : "text-slate-700"
+          }`}
+        >
           Theme
         </label>
-        <div className="flex bg-slate-100 p-1 rounded-xl w-fit">
+        <div
+          className={`flex p-1 rounded-xl w-fit transition-colors duration-300 ${
+            isDark ? "bg-slate-800/80" : "bg-slate-100"
+          }`}
+        >
           <button
             type="button"
-            className="px-4 py-1.5 text-xs font-medium rounded-lg bg-white text-slate-800 shadow-sm cursor-pointer"
+            onClick={() => {
+              themeUse.setTheme("light");
+            }}
+            className={`px-4 py-1.5 text-xs font-medium rounded-lg cursor-pointer transition-all ${
+              !isDark
+                ? "bg-white text-slate-800 shadow-sm"
+                : "text-slate-400 hover:text-white"
+            }`}
           >
             ☀️ Light Mode
           </button>
+
           <button
             type="button"
-            className="px-4 py-1.5 text-xs font-medium rounded-lg text-slate-500 cursor-pointer"
+            onClick={() => {
+              themeUse.setTheme("dark");
+            }}
+            className={`px-4 py-1.5 text-xs font-medium rounded-lg cursor-pointer transition-all ${
+              isDark
+                ? "bg-slate-700 text-white shadow-sm"
+                : "text-slate-500 hover:text-slate-800"
+            }`}
           >
             🌙 Dark Mode
           </button>
         </div>
-      </div>
-
-      {/* Language Dropdown */}
-      <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">
-          Language
-        </label>
-        <select
-          defaultValue="English (Current)"
-          className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-[#FF7A59] text-sm bg-white"
-        >
-          <option value="English (Current)">English (Current)</option>
-          <option value="Arabic">Arabic</option>
-        </select>
       </div>
     </div>
   );

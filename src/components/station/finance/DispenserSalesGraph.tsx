@@ -1,6 +1,8 @@
 "use client";
 
+import { useContext } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { ThemeContext } from "../../../../context/ThemeContext";
 
 import {
   Card,
@@ -35,22 +37,41 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function ChartBarDefault() {
+  const { theme } = useContext(ThemeContext);
+  const isDark = theme === "dark";
+
   return (
-    <Card>
+    <Card
+      className={`transition-colors duration-300 ${
+        isDark
+          ? "bg-[#0F172A] border-slate-800 text-white"
+          : "bg-white border-gray-100 text-slate-900"
+      }`}
+    >
       <CardHeader>
-        <CardTitle>Bar Chart</CardTitle>
-        <CardDescription>January - June 2026</CardDescription>
+        <CardTitle className={isDark ? "text-white" : "text-slate-800"}>
+          Bar Chart
+        </CardTitle>
+        <CardDescription
+          className={isDark ? "text-slate-400" : "text-slate-500"}
+        >
+          January - June 2026
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
           <BarChart accessibilityLayer data={chartData}>
-            <CartesianGrid vertical={false} />
+            <CartesianGrid
+              vertical={false}
+              stroke={isDark ? "#1E293B" : "#E2E8F0"}
+            />
             <XAxis
               dataKey="month"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
               tickFormatter={(value) => value.slice(0, 3)}
+              stroke={isDark ? "#94A3B8" : "#64748B"}
             />
             <ChartTooltip
               cursor={false}

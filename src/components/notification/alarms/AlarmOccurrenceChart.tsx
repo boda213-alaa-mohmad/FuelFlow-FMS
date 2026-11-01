@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   LineChart,
   Line,
@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { BarChart2, List, MoreHorizontal } from "lucide-react";
+import { ThemeContext } from "../../../../context/ThemeContext";
 
 const chartData = [
   { time: "Text", value: 85 },
@@ -25,25 +26,48 @@ const chartData = [
 ];
 
 export function AlarmOccurrenceChart() {
+  const { theme } = useContext(ThemeContext);
+  const isDark = theme === "dark";
+
   const [viewMode, setViewMode] = useState<"chart" | "list">("chart");
 
   return (
-    <div className="bg-white p-1 rounded-2xl border border-slate-100 shadow-sm space-y-6 w-full">
+    <div
+      className={`p-6 rounded-2xl border shadow-sm space-y-6 w-full transition-colors duration-300 ${
+        isDark
+          ? "bg-[#0F172A] border-slate-800 text-white"
+          : "bg-white border-slate-100 text-slate-900"
+      }`}
+    >
       {/* Header & View Mode Toggles */}
-      <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-        <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+      <div
+        className={`flex items-center justify-between border-b pb-4 transition-colors duration-300 ${
+          isDark ? "border-slate-800" : "border-slate-100"
+        }`}
+      >
+        <h3
+          className={`text-xs font-bold uppercase tracking-wider ${
+            isDark ? "text-slate-300" : "text-slate-700"
+          }`}
+        >
           ALARM OCCURRENCE STATE
         </h3>
 
         <div className="flex items-center gap-3">
           {/* Toggle Buttons */}
-          <div className="flex items-center bg-[#FAF6F5] p-1 rounded-xl">
+          <div
+            className={`flex items-center p-1 rounded-xl transition-colors duration-300 ${
+              isDark ? "bg-slate-800/80" : "bg-[#FAF6F5]"
+            }`}
+          >
             <button
               onClick={() => setViewMode("chart")}
               className={`p-1.5 rounded-lg transition cursor-pointer ${
                 viewMode === "chart"
                   ? "bg-[#FF7A59] text-white shadow-xs"
-                  : "text-slate-500 hover:text-slate-800"
+                  : isDark
+                    ? "text-slate-400 hover:text-white"
+                    : "text-slate-500 hover:text-slate-800"
               }`}
             >
               <BarChart2 size={16} />
@@ -53,14 +77,22 @@ export function AlarmOccurrenceChart() {
               className={`p-1.5 rounded-lg transition cursor-pointer ${
                 viewMode === "list"
                   ? "bg-[#FF7A59] text-white shadow-xs"
-                  : "text-slate-500 hover:text-slate-800"
+                  : isDark
+                    ? "text-slate-400 hover:text-white"
+                    : "text-slate-500 hover:text-slate-800"
               }`}
             >
               <List size={16} />
             </button>
           </div>
 
-          <button className="text-slate-400 hover:text-slate-600 transition cursor-pointer">
+          <button
+            className={`transition cursor-pointer ${
+              isDark
+                ? "text-slate-400 hover:text-white"
+                : "text-slate-400 hover:text-slate-600"
+            }`}
+          >
             <MoreHorizontal size={18} />
           </button>
         </div>
@@ -76,11 +108,11 @@ export function AlarmOccurrenceChart() {
             <CartesianGrid
               strokeDasharray="3 3"
               vertical={false}
-              stroke="#f1f5f9"
+              stroke={isDark ? "#1E293B" : "#f1f5f9"}
             />
             <XAxis
               dataKey="time"
-              tick={{ fontSize: 10, fill: "#94a3b8" }}
+              tick={{ fontSize: 10, fill: isDark ? "#94A3B8" : "#94a3b8" }}
               axisLine={false}
               tickLine={false}
               dy={10}
@@ -88,7 +120,7 @@ export function AlarmOccurrenceChart() {
             <YAxis
               domain={[0, 100]}
               ticks={[0, 20, 40, 60, 80, 100]}
-              tick={{ fontSize: 10, fill: "#94a3b8" }}
+              tick={{ fontSize: 10, fill: isDark ? "#94A3B8" : "#94a3b8" }}
               axisLine={false}
               tickLine={false}
             />

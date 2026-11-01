@@ -1,8 +1,10 @@
 "use client";
+
 import { z } from "zod";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import SuccessModal from "./SuccessModal";
+import { ThemeContext } from "../../../context/ThemeContext";
 
 const passwordSchema = z.object({
   password: z
@@ -18,6 +20,9 @@ const passwordSchema = z.object({
 });
 
 export default function PasswordForm() {
+  const { theme } = useContext(ThemeContext);
+  const isDark = theme === "dark";
+
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
 
@@ -30,7 +35,6 @@ export default function PasswordForm() {
     confirmPassword?: string;
   }>({});
 
-  // ? this card if password === confirmpassword will show
   const [showCard, setShowCard] = useState<boolean>(false);
 
   function validtaion() {
@@ -59,18 +63,38 @@ export default function PasswordForm() {
   }
 
   return (
-    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-      <h2 className="text-lg font-semibold text-slate-800">Change Password</h2>
+    <div
+      className={`p-6 rounded-2xl border shadow-sm space-y-4 transition-colors duration-300 ${
+        isDark
+          ? "bg-[#0F172A] border-slate-800 text-white"
+          : "bg-white border-gray-100 text-slate-900"
+      }`}
+    >
+      <h2
+        className={`text-lg font-semibold ${
+          isDark ? "text-white" : "text-slate-800"
+        }`}
+      >
+        Change Password
+      </h2>
 
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">
+        <label
+          className={`block text-sm font-medium mb-1 ${
+            isDark ? "text-slate-300" : "text-slate-700"
+          }`}
+        >
           new Password
         </label>
         <div className="relative">
           <input
             type={showPassword ? "text" : "password"}
             placeholder="••••••••"
-            className="w-full px-4 py-2.5 pr-10 rounded-xl border border-gray-200 focus:outline-none focus:border-[#FF7A59] text-sm "
+            className={`w-full px-4 py-2.5 pr-10 rounded-xl border focus:outline-none focus:border-[#FF7A59] text-sm transition-colors duration-200 ${
+              isDark
+                ? "bg-slate-900/50 border-slate-700 text-white placeholder-slate-500"
+                : "bg-white border-gray-200 text-slate-900 placeholder-slate-400"
+            }`}
             value={password}
             onChange={(e) => {
               setPassword(e.target.value);
@@ -83,7 +107,11 @@ export default function PasswordForm() {
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+            className={`absolute right-3 top-1/2 -translate-y-1/2 transition-colors cursor-pointer ${
+              isDark
+                ? "text-slate-400 hover:text-white"
+                : "text-slate-400 hover:text-slate-600"
+            }`}
           >
             {showPassword ? (
               <EyeOff className="w-4 h-4" />
@@ -99,14 +127,22 @@ export default function PasswordForm() {
       )}
 
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">
+        <label
+          className={`block text-sm font-medium mb-1 ${
+            isDark ? "text-slate-300" : "text-slate-700"
+          }`}
+        >
           confirm Password
         </label>
         <div className="relative">
           <input
             type={showConfirmPassword ? "text" : "password"}
             placeholder="••••••••"
-            className="w-full px-4 py-2.5 pr-10 rounded-xl border border-gray-200 focus:outline-none focus:border-[#FF7A59] text-sm"
+            className={`w-full px-4 py-2.5 pr-10 rounded-xl border focus:outline-none focus:border-[#FF7A59] text-sm transition-colors duration-200 ${
+              isDark
+                ? "bg-slate-900/50 border-slate-700 text-white placeholder-slate-500"
+                : "bg-white border-gray-200 text-slate-900 placeholder-slate-400"
+            }`}
             value={confirmPassword}
             onChange={(e) => {
               setConfirmPassword(e.target.value);
@@ -119,7 +155,11 @@ export default function PasswordForm() {
           <button
             type="button"
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+            className={`absolute right-3 top-1/2 -translate-y-1/2 transition-colors cursor-pointer ${
+              isDark
+                ? "text-slate-400 hover:text-white"
+                : "text-slate-400 hover:text-slate-600"
+            }`}
           >
             {showConfirmPassword ? (
               <EyeOff className="w-4 h-4" />
@@ -137,11 +177,12 @@ export default function PasswordForm() {
 
       <button
         type="button"
-        className="px-5 py-2.5 bg-[#FF7A59] text-white text-sm font-medium rounded-xl hover:bg-[#e06849] transition cursor-pointer"
+        className="px-5 py-2.5 bg-[#FF7A59] text-white text-sm font-medium rounded-xl hover:bg-[#e06849] transition cursor-pointer shadow-sm"
         onClick={validtaion}
       >
         Update Password
       </button>
+
       {showCard && (
         <SuccessModal
           onClose={() => {

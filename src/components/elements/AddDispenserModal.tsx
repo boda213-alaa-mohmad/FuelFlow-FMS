@@ -2,12 +2,20 @@
 
 import { useState } from "react";
 import AddButton from "./AddButtonModal";
-import { Dispenser } from "./DashboardHeader";
 
 interface AddDispenserModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (newDispenser: Dispenser) => void;
+  onSave: (newDispenser: DispenserProps) => void;
+}
+
+export interface DispenserProps {
+  name: string;
+  channelId: string;
+  station: string;
+  line: string;
+  order: string;
+  position: string;
 }
 
 export default function AddDispenserModal({
