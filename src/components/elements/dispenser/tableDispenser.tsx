@@ -9,11 +9,13 @@ import { ThemeContext } from "../../../../context/ThemeContext";
 interface DispenserTableProps {
   dispensers: DispenserItem[];
   onDelete: (id: string) => void;
+  onEdit: (id: string) => void;
 }
 
 export default function DispensersTable({
   dispensers,
   onDelete,
+  onEdit,
 }: DispenserTableProps) {
   const { theme } = useContext(ThemeContext);
   const isDark = theme === "dark";
@@ -133,6 +135,7 @@ export default function DispensersTable({
                               ? "bg-slate-800 hover:bg-slate-700 text-slate-300"
                               : "bg-slate-100 hover:bg-slate-200 text-slate-600"
                           }`}
+                          onClick={() => onEdit(dispenser.id)}
                         >
                           <Edit3 size={16} />
                         </button>

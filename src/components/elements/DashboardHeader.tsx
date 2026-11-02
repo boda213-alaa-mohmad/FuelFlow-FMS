@@ -45,22 +45,24 @@ export default function DashboardHeader() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [stations, setStations] = useState<Station[]>(mockStations);
-  const [dispensers, setDispensers] = useState<DispenserItem[]>(mockDispensers);
 
+  // Dispensers State & Edit State
+  const [dispensers, setDispensers] = useState<DispenserItem[]>(mockDispensers);
+  const [selectedDispenser, setSelectedDispenser] =
+    useState<DispenserItem | null>(null);
+
+  // Compressors State & Edit State
   const [compressors, setCompressors] =
     useState<CompressorItem[]>(mockCompressors);
-
   const [selectedCompressor, setSelectedCompressor] =
     useState<CompressorItem | null>(null);
 
   const [nozzles, setNozzles] = useState<NozzleItem[]>(mockNozzles);
-
   const [activeTab, setActiveTab] = useState<TabId>("station");
 
   // Restore saved tab
   useEffect(() => {
     const savedTab = localStorage.getItem("tab");
-
     const isValidTab = TABS.some((tab) => tab.id === savedTab);
 
     if (isValidTab) {
@@ -76,9 +78,10 @@ export default function DashboardHeader() {
     setActiveTab(id);
     handleSaveLocalStorage(id);
 
-    // Close modal when changing tabs
+    // Close modals and reset selections when changing tabs
     setIsModalOpen(false);
     setSelectedCompressor(null);
+    setSelectedDispenser(null);
   }
 
   // Stations
@@ -97,16 +100,41 @@ export default function DashboardHeader() {
     setStations((previous) => previous.filter((station) => station.id !== id));
   }
 
-  // Dispensers
-  function handleAddDispenser(newDispenser: Dispenser) {
-    const dispenser: DispenserItem = {
-      ...newDispenser,
-      id: crypto.randomUUID(),
-      status: "active",
-    };
+  // Dispensers - Add & Edit
+  function handleSaveDispenser(data: Dispenser) {
+    if (selectedDispenser) {
+      // Update existing dispenser
+      setDispensers((previous) =>
+        previous.map((dispenser) =>
+          dispenser.id === selectedDispenser.id
+            ? {
+                ...dispenser,
+                ...data,
+              }
+            : dispenser,
+        ),
+      );
+    } else {
+      // Add new dispenser
+      const newDispenser: DispenserItem = {
+        ...data,
+        id: crypto.randomUUID(),
+        status: "active",
+      };
 
-    setDispensers((previous) => [...previous, dispenser]);
+      setDispensers((previous) => [...previous, newDispenser]);
+    }
+
+    setSelectedDispenser(null);
     setIsModalOpen(false);
+  }
+
+  function handleEditDispenser(id: string) {
+    const selected = dispensers.find((dispenser) => dispenser.id === id);
+    if (!selected) return;
+
+    setSelectedDispenser(selected);
+    setIsModalOpen(true);
   }
 
   function handleDeleteDispenser(id: string) {
@@ -118,7 +146,6 @@ export default function DashboardHeader() {
   // Compressors - Add & Edit
   function handleSaveCompressor(data: NewCompressor) {
     if (selectedCompressor) {
-      // Update existing compressor
       setCompressors((previous) =>
         previous.map((compressor) =>
           compressor.id === selectedCompressor.id
@@ -130,7 +157,6 @@ export default function DashboardHeader() {
         ),
       );
     } else {
-      // Add new compressor
       const newCompressor: CompressorItem = {
         ...data,
         id: crypto.randomUUID(),
@@ -144,17 +170,14 @@ export default function DashboardHeader() {
     setIsModalOpen(false);
   }
 
-  // Open modal for editing
   function handleEditCompressor(id: string) {
     const selected = compressors.find((compressor) => compressor.id === id);
-
     if (!selected) return;
 
     setSelectedCompressor(selected);
     setIsModalOpen(true);
   }
 
-  // Delete compressor
   function handleDeleteCompressor(id: string) {
     setCompressors((previous) =>
       previous.filter((compressor) => compressor.id !== id),
@@ -177,15 +200,17 @@ export default function DashboardHeader() {
     setNozzles((previous) => previous.filter((nozzle) => nozzle.id !== id));
   }
 
-  // Close modal
+  // Close modals safely
   function handleCloseModal() {
     setIsModalOpen(false);
     setSelectedCompressor(null);
+    setSelectedDispenser(null);
   }
 
-  // Open Add modal
+  // Open Add modal safely
   function handleOpenAddModal() {
     setSelectedCompressor(null);
+    setSelectedDispenser(null);
     setIsModalOpen(true);
   }
 
@@ -244,12 +269,14 @@ export default function DashboardHeader() {
           <AddDispenserModal
             isOpen={isModalOpen}
             onClose={handleCloseModal}
-            onSave={handleAddDispenser}
+            onSave={handleSaveDispenser}
+            dispenser={selectedDispenser}
           />
 
           <DispensersTable
             dispensers={dispensers}
             onDelete={handleDeleteDispenser}
+            onEdit={handleEditDispenser}
           />
         </>
       )}
