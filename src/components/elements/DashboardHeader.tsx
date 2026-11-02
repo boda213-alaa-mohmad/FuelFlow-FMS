@@ -46,13 +46,18 @@ export default function DashboardHeader() {
 
   const [stations, setStations] = useState<Station[]>(mockStations);
   const [dispensers, setDispensers] = useState<DispenserItem[]>(mockDispensers);
+
   const [compressors, setCompressors] =
     useState<CompressorItem[]>(mockCompressors);
+
+  const [selectedCompressor, setSelectedCompressor] =
+    useState<CompressorItem | null>(null);
+
   const [nozzles, setNozzles] = useState<NozzleItem[]>(mockNozzles);
 
   const [activeTab, setActiveTab] = useState<TabId>("station");
 
-  // Restore the saved tab safely from localStorage
+  // Restore saved tab
   useEffect(() => {
     const savedTab = localStorage.getItem("tab");
 
@@ -70,6 +75,10 @@ export default function DashboardHeader() {
   function handleTabChange(id: TabId) {
     setActiveTab(id);
     handleSaveLocalStorage(id);
+
+    // Close modal when changing tabs
+    setIsModalOpen(false);
+    setSelectedCompressor(null);
   }
 
   // Stations
@@ -80,14 +89,12 @@ export default function DashboardHeader() {
       status: "active",
     };
 
-    setStations((previousStations) => [...previousStations, station]);
+    setStations((previous) => [...previous, station]);
     setIsModalOpen(false);
   }
 
   function handleDeleteStation(id: string) {
-    setStations((previousStations) =>
-      previousStations.filter((station) => station.id !== id),
-    );
+    setStations((previous) => previous.filter((station) => station.id !== id));
   }
 
   // Dispensers
@@ -98,43 +105,60 @@ export default function DashboardHeader() {
       status: "active",
     };
 
-    setDispensers((previousDispensers) => [...previousDispensers, dispenser]);
-
+    setDispensers((previous) => [...previous, dispenser]);
     setIsModalOpen(false);
   }
 
   function handleDeleteDispenser(id: string) {
-    setDispensers((previousDispensers) =>
-      previousDispensers.filter((dispenser) => dispenser.id !== id),
+    setDispensers((previous) =>
+      previous.filter((dispenser) => dispenser.id !== id),
     );
   }
 
-  // Compressors
-  function handleAddCompressor(newCompressor: NewCompressor) {
-    const compressor: CompressorItem = {
-      ...newCompressor,
-      id: crypto.randomUUID(),
-      status: "active",
-    };
+  // Compressors - Add & Edit
+  function handleSaveCompressor(data: NewCompressor) {
+    if (selectedCompressor) {
+      // Update existing compressor
+      setCompressors((previous) =>
+        previous.map((compressor) =>
+          compressor.id === selectedCompressor.id
+            ? {
+                ...compressor,
+                ...data,
+              }
+            : compressor,
+        ),
+      );
+    } else {
+      // Add new compressor
+      const newCompressor: CompressorItem = {
+        ...data,
+        id: crypto.randomUUID(),
+        status: "active",
+      };
 
-    setCompressors((previousCompressors) => [
-      ...previousCompressors,
-      compressor,
-    ]);
+      setCompressors((previous) => [...previous, newCompressor]);
+    }
 
+    setSelectedCompressor(null);
     setIsModalOpen(false);
   }
 
-  function handleDeleteCompressor(id: string) {
-    setCompressors((previousCompressors) =>
-      previousCompressors.filter((compressor) => compressor.id !== id),
-    );
+  // Open modal for editing
+  function handleEditCompressor(id: string) {
+    const selected = compressors.find((compressor) => compressor.id === id);
+
+    if (!selected) return;
+
+    setSelectedCompressor(selected);
+    setIsModalOpen(true);
   }
 
-  // todo: function compressor
-  function handleEditCompressor(id: string) {
-    console.log(id);
-    setIsModalOpen(true);
+  // Delete compressor
+  function handleDeleteCompressor(id: string) {
+    setCompressors((previous) =>
+      previous.filter((compressor) => compressor.id !== id),
+    );
   }
 
   // Nozzles
@@ -145,14 +169,24 @@ export default function DashboardHeader() {
       status: "active",
     };
 
-    setNozzles((previousNozzles) => [...previousNozzles, nozzle]);
+    setNozzles((previous) => [...previous, nozzle]);
     setIsModalOpen(false);
   }
 
   function handleDeleteNozzle(id: string) {
-    setNozzles((previousNozzles) =>
-      previousNozzles.filter((nozzle) => nozzle.id !== id),
-    );
+    setNozzles((previous) => previous.filter((nozzle) => nozzle.id !== id));
+  }
+
+  // Close modal
+  function handleCloseModal() {
+    setIsModalOpen(false);
+    setSelectedCompressor(null);
+  }
+
+  // Open Add modal
+  function handleOpenAddModal() {
+    setSelectedCompressor(null);
+    setIsModalOpen(true);
   }
 
   return (
@@ -191,12 +225,12 @@ export default function DashboardHeader() {
         })}
       </div>
 
-      {/* Stations section */}
+      {/* Stations */}
       {activeTab === "station" && (
         <>
           <AddStationModal
             isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
+            onClose={handleCloseModal}
             onSave={handleAddStation}
           />
 
@@ -204,12 +238,12 @@ export default function DashboardHeader() {
         </>
       )}
 
-      {/* Dispensers section */}
+      {/* Dispensers */}
       {activeTab === "dispenser" && (
         <>
           <AddDispenserModal
             isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
+            onClose={handleCloseModal}
             onSave={handleAddDispenser}
           />
 
@@ -220,13 +254,14 @@ export default function DashboardHeader() {
         </>
       )}
 
-      {/* Compressors section */}
+      {/* Compressors */}
       {activeTab === "compressor" && (
         <>
           <AddCompressorModal
             isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            onSave={handleAddCompressor}
+            onClose={handleCloseModal}
+            onSave={handleSaveCompressor}
+            compressor={selectedCompressor}
           />
 
           <CompressorsTable
@@ -237,12 +272,12 @@ export default function DashboardHeader() {
         </>
       )}
 
-      {/* Nozzles section */}
+      {/* Nozzles */}
       {activeTab === "nozzle" && (
         <>
           <AddNozzleModal
             isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
+            onClose={handleCloseModal}
             onSave={handleAddNozzle}
           />
 
@@ -254,7 +289,7 @@ export default function DashboardHeader() {
       <div className="mx-auto w-full max-w-[1200px] px-4">
         <button
           type="button"
-          onClick={() => setIsModalOpen(true)}
+          onClick={handleOpenAddModal}
           className="ml-auto mt-6 flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#FF7A59] px-6 py-3 font-medium text-white shadow-sm transition-all duration-200 hover:bg-[#ff653c]"
         >
           <span className="text-xl font-bold">+</span>

@@ -63,21 +63,24 @@ export default function CompressorsTable({
                       isDark ? "hover:bg-slate-800/50" : "hover:bg-slate-50/50"
                     }`}
                   >
-                    <td className="py-4 px-6 font-medium flex items-center gap-3">
-                      <span
-                        className={`w-2.5 h-2.5 rounded-full ${
-                          compressor.status === "active"
-                            ? "bg-[#FF7A59]"
-                            : isDark
-                              ? "bg-slate-700"
-                              : "bg-blue-200"
-                        }`}
-                      />
-                      <span
-                        className={isDark ? "text-white" : "text-slate-800"}
-                      >
-                        {compressor.name}
-                      </span>
+                    <td className="py-4 px-6 font-medium">
+                      <div className="flex items-center gap-3">
+                        <span
+                          className={`w-2.5 h-2.5 rounded-full ${
+                            compressor.status === "active"
+                              ? "bg-[#FF7A59]"
+                              : isDark
+                                ? "bg-slate-700"
+                                : "bg-blue-200"
+                          }`}
+                        />
+
+                        <span
+                          className={isDark ? "text-white" : "text-slate-800"}
+                        >
+                          {compressor.name}
+                        </span>
+                      </div>
                     </td>
 
                     <td
@@ -98,29 +101,30 @@ export default function CompressorsTable({
 
                     <td className="py-4 px-6">
                       <div className="flex items-center justify-center gap-2">
+                        {/* Edit */}
                         <button
+                          type="button"
                           title="Edit"
                           className={`p-2 rounded-xl transition-colors cursor-pointer ${
                             isDark
                               ? "bg-slate-800 hover:bg-slate-700 text-slate-300"
                               : "bg-slate-100 hover:bg-slate-200 text-slate-600"
                           }`}
-                          onClick={() => {
-                            onEdit(compressor.id);
-                          }}
+                          onClick={() => onEdit(compressor.id)}
                         >
                           <Edit3 size={16} />
                         </button>
+
+                        {/* Delete */}
                         <button
+                          type="button"
                           title="Delete"
                           className={`p-2 rounded-xl transition-colors cursor-pointer ${
                             isDark
                               ? "bg-orange-500/10 hover:bg-orange-500/20 text-[#FF7A59]"
                               : "bg-orange-50 hover:bg-orange-100 text-[#FF7A59]"
                           }`}
-                          onClick={() => {
-                            onDelete(compressor.id);
-                          }}
+                          onClick={() => onDelete(compressor.id)}
                         >
                           <Trash2 size={16} />
                         </button>

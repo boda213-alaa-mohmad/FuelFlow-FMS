@@ -12,6 +12,7 @@ interface CardType {
   isOpen: boolean;
   onClose: () => void;
   onSave: () => void;
+  saveLabel?: string;
 }
 
 export default function AddButton({
@@ -21,6 +22,7 @@ export default function AddButton({
   isOpen,
   onClose,
   onSave,
+  saveLabel = "Save",
 }: CardType) {
   const { theme } = useContext(ThemeContext);
   const isDark = theme === "dark";
@@ -36,6 +38,7 @@ export default function AddButton({
             : "bg-white border-gray-100 text-slate-900"
         }`}
       >
+        {/* Header */}
         <div
           className={`flex items-center justify-between border-b pb-4 transition-colors duration-300 ${
             isDark ? "border-slate-800" : "border-gray-100"
@@ -48,6 +51,7 @@ export default function AddButton({
               width={32}
               height={32}
             />
+
             <h2
               className={`text-lg font-bold ${
                 isDark ? "text-white" : "text-slate-700"
@@ -70,8 +74,10 @@ export default function AddButton({
           </button>
         </div>
 
+        {/* Content */}
         <div className="py-4">{children}</div>
 
+        {/* Footer */}
         <div
           className={`flex justify-end gap-3 border-t pt-4 transition-colors duration-300 ${
             isDark ? "border-slate-800" : "border-gray-100"
@@ -109,7 +115,8 @@ export default function AddButton({
               <polyline points="17 21 17 13 7 13 7 21" />
               <polyline points="7 3 7 8 15 8" />
             </svg>
-            Save
+
+            {saveLabel}
           </button>
         </div>
       </div>
