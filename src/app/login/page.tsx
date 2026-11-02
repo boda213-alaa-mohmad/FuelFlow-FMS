@@ -106,15 +106,11 @@ export default function Login() {
           <p className={styles.desc}>
             Ask the admin to create an account for you to start viewing our
             Dashboards.
+            <br />
+            email: bodaAlaa@example.com
+            <br />
+            password: 123456789
           </p>
-
-          <Button
-            variant="outline"
-            size="lg"
-            className="rounded-full border-2 border-[#3d5161] text-[#3d5161] bg-transparent hover:bg-[#3d5161] hover:text-white px-8 py-6"
-          >
-            Request Account
-          </Button>
         </div>
       </div>
       {/* RIGHT SECTION */}
