@@ -30,7 +30,7 @@ export default function AddButton({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 h-screen w-screen overflow-y-auto">
       <div
         className={`w-full max-w-4xl rounded-2xl p-6 shadow-xl md:p-8 border transition-colors duration-300 ${
           isDark
