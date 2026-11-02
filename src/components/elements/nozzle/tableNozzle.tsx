@@ -9,9 +9,14 @@ import { ThemeContext } from "../../../../context/ThemeContext";
 interface NozzlesTableType {
   nozzles: NozzleItem[];
   onDelete: (id: string) => void;
+  onEdit: (id: string) => void;
 }
 
-export default function NozzlesTable({ nozzles, onDelete }: NozzlesTableType) {
+export default function NozzlesTable({
+  nozzles,
+  onDelete,
+  onEdit,
+}: NozzlesTableType) {
   const { theme } = useContext(ThemeContext);
   const isDark = theme === "dark";
 
@@ -98,16 +103,19 @@ export default function NozzlesTable({ nozzles, onDelete }: NozzlesTableType) {
                     <td className="py-4 px-6">
                       <div className="flex items-center justify-center gap-2">
                         <button
+                          type="button"
                           title="Edit"
                           className={`p-2 rounded-xl transition-colors cursor-pointer ${
                             isDark
                               ? "bg-slate-800 hover:bg-slate-700 text-slate-300"
                               : "bg-slate-100 hover:bg-slate-200 text-slate-600"
                           }`}
+                          onClick={() => onEdit(nozzle.id)}
                         >
                           <Edit3 size={16} />
                         </button>
                         <button
+                          type="button"
                           title="Delete"
                           className={`p-2 rounded-xl transition-colors cursor-pointer ${
                             isDark

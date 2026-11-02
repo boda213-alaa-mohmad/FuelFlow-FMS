@@ -57,7 +57,10 @@ export default function DashboardHeader() {
   const [selectedCompressor, setSelectedCompressor] =
     useState<CompressorItem | null>(null);
 
+  // Nozzles State & Edit State
   const [nozzles, setNozzles] = useState<NozzleItem[]>(mockNozzles);
+  const [selectedNozzle, setSelectedNozzle] = useState<NozzleItem | null>(null);
+
   const [activeTab, setActiveTab] = useState<TabId>("station");
 
   // Restore saved tab
@@ -82,6 +85,7 @@ export default function DashboardHeader() {
     setIsModalOpen(false);
     setSelectedCompressor(null);
     setSelectedDispenser(null);
+    setSelectedNozzle(null);
   }
 
   // Stations
@@ -103,25 +107,19 @@ export default function DashboardHeader() {
   // Dispensers - Add & Edit
   function handleSaveDispenser(data: Dispenser) {
     if (selectedDispenser) {
-      // Update existing dispenser
       setDispensers((previous) =>
         previous.map((dispenser) =>
           dispenser.id === selectedDispenser.id
-            ? {
-                ...dispenser,
-                ...data,
-              }
+            ? { ...dispenser, ...data }
             : dispenser,
         ),
       );
     } else {
-      // Add new dispenser
       const newDispenser: DispenserItem = {
         ...data,
         id: crypto.randomUUID(),
         status: "active",
       };
-
       setDispensers((previous) => [...previous, newDispenser]);
     }
 
@@ -149,10 +147,7 @@ export default function DashboardHeader() {
       setCompressors((previous) =>
         previous.map((compressor) =>
           compressor.id === selectedCompressor.id
-            ? {
-                ...compressor,
-                ...data,
-              }
+            ? { ...compressor, ...data }
             : compressor,
         ),
       );
@@ -162,7 +157,6 @@ export default function DashboardHeader() {
         id: crypto.randomUUID(),
         status: "active",
       };
-
       setCompressors((previous) => [...previous, newCompressor]);
     }
 
@@ -184,16 +178,33 @@ export default function DashboardHeader() {
     );
   }
 
-  // Nozzles
-  function handleAddNozzle(nozzleData: newNozzle) {
-    const nozzle: NozzleItem = {
-      ...nozzleData,
-      id: crypto.randomUUID(),
-      status: "active",
-    };
+  // Nozzles - Add & Edit
+  function handleSaveNozzle(data: newNozzle) {
+    if (selectedNozzle) {
+      setNozzles((previous) =>
+        previous.map((nozzle) =>
+          nozzle.id === selectedNozzle.id ? { ...nozzle, ...data } : nozzle,
+        ),
+      );
+    } else {
+      const nozzle: NozzleItem = {
+        ...data,
+        id: crypto.randomUUID(),
+        status: "active",
+      };
+      setNozzles((previous) => [...previous, nozzle]);
+    }
 
-    setNozzles((previous) => [...previous, nozzle]);
+    setSelectedNozzle(null);
     setIsModalOpen(false);
+  }
+
+  function handleEditNozzle(id: string) {
+    const selected = nozzles.find((nozzle) => nozzle.id === id);
+    if (!selected) return;
+
+    setSelectedNozzle(selected);
+    setIsModalOpen(true);
   }
 
   function handleDeleteNozzle(id: string) {
@@ -205,12 +216,14 @@ export default function DashboardHeader() {
     setIsModalOpen(false);
     setSelectedCompressor(null);
     setSelectedDispenser(null);
+    setSelectedNozzle(null);
   }
 
   // Open Add modal safely
   function handleOpenAddModal() {
     setSelectedCompressor(null);
     setSelectedDispenser(null);
+    setSelectedNozzle(null);
     setIsModalOpen(true);
   }
 
@@ -305,10 +318,15 @@ export default function DashboardHeader() {
           <AddNozzleModal
             isOpen={isModalOpen}
             onClose={handleCloseModal}
-            onSave={handleAddNozzle}
+            onSave={handleSaveNozzle}
+            nozzle={selectedNozzle}
           />
 
-          <NozzlesTable nozzles={nozzles} onDelete={handleDeleteNozzle} />
+          <NozzlesTable
+            nozzles={nozzles}
+            onDelete={handleDeleteNozzle}
+            onEdit={handleEditNozzle}
+          />
         </>
       )}
 
