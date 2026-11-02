@@ -11,11 +11,13 @@ type Station = (typeof mockStations)[number];
 interface StationsTableProps {
   stations: Station[];
   onDelete: (id: string) => void;
+  onEdit: (id: string) => void;
 }
 
 export default function StationsTable({
   stations,
   onDelete,
+  onEdit,
 }: StationsTableProps) {
   const { theme } = useContext(ThemeContext);
   const isDark = theme === "dark";
@@ -110,6 +112,7 @@ export default function StationsTable({
                         <button
                           type="button"
                           title="Edit"
+                          onClick={() => onEdit(station.id)}
                           className={`cursor-pointer rounded-xl p-2 transition-colors ${
                             isDark
                               ? "bg-slate-800 hover:bg-slate-700 text-slate-300"

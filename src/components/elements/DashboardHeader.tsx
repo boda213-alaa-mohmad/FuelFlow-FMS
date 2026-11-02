@@ -44,7 +44,9 @@ export default function DashboardHeader() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Stations State & Edit State
   const [stations, setStations] = useState<Station[]>(mockStations);
+  const [selectedStation, setSelectedStation] = useState<Station | null>(null);
 
   // Dispensers State & Edit State
   const [dispensers, setDispensers] = useState<DispenserItem[]>(mockDispensers);
@@ -83,21 +85,39 @@ export default function DashboardHeader() {
 
     // Close modals and reset selections when changing tabs
     setIsModalOpen(false);
+    setSelectedStation(null);
     setSelectedCompressor(null);
     setSelectedDispenser(null);
     setSelectedNozzle(null);
   }
 
-  // Stations
-  function handleAddStation(newStation: NewStation) {
-    const station: Station = {
-      ...newStation,
-      id: crypto.randomUUID(),
-      status: "active",
-    };
+  // Stations - Add & Edit
+  function handleSaveStation(data: NewStation) {
+    if (selectedStation) {
+      setStations((previous) =>
+        previous.map((station) =>
+          station.id === selectedStation.id ? { ...station, ...data } : station,
+        ),
+      );
+    } else {
+      const station: Station = {
+        ...data,
+        id: crypto.randomUUID(),
+        status: "active",
+      };
+      setStations((previous) => [...previous, station]);
+    }
 
-    setStations((previous) => [...previous, station]);
+    setSelectedStation(null);
     setIsModalOpen(false);
+  }
+
+  function handleEditStation(id: string) {
+    const selected = stations.find((station) => station.id === id);
+    if (!selected) return;
+
+    setSelectedStation(selected);
+    setIsModalOpen(true);
   }
 
   function handleDeleteStation(id: string) {
@@ -214,6 +234,7 @@ export default function DashboardHeader() {
   // Close modals safely
   function handleCloseModal() {
     setIsModalOpen(false);
+    setSelectedStation(null);
     setSelectedCompressor(null);
     setSelectedDispenser(null);
     setSelectedNozzle(null);
@@ -221,6 +242,7 @@ export default function DashboardHeader() {
 
   // Open Add modal safely
   function handleOpenAddModal() {
+    setSelectedStation(null);
     setSelectedCompressor(null);
     setSelectedDispenser(null);
     setSelectedNozzle(null);
@@ -269,10 +291,15 @@ export default function DashboardHeader() {
           <AddStationModal
             isOpen={isModalOpen}
             onClose={handleCloseModal}
-            onSave={handleAddStation}
+            onSave={handleSaveStation}
+            station={selectedStation}
           />
 
-          <StationsTable stations={stations} onDelete={handleDeleteStation} />
+          <StationsTable
+            stations={stations}
+            onDelete={handleDeleteStation}
+            onEdit={handleEditStation}
+          />
         </>
       )}
 
