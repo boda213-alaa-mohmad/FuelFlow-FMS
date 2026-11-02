@@ -1,7 +1,9 @@
 "use client";
 
+import { useContext } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
+import { ThemeContext } from "../../../context/ThemeContext";
 
 interface CardType {
   icon: string;
@@ -20,12 +22,25 @@ export default function AddButton({
   onClose,
   onSave,
 }: CardType) {
+  const { theme } = useContext(ThemeContext);
+  const isDark = theme === "dark";
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-700/70 p-4">
-      <div className="w-full max-w-4xl rounded-2xl bg-white p-6 shadow-xl md:p-8">
-        <div className="flex items-center justify-between border-b border-gray-100 pb-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-in fade-in duration-300">
+      <div
+        className={`w-full max-w-4xl rounded-2xl p-6 shadow-xl md:p-8 border transition-colors duration-300 ${
+          isDark
+            ? "bg-[#0F172A] border-slate-800 text-white"
+            : "bg-white border-gray-100 text-slate-900"
+        }`}
+      >
+        <div
+          className={`flex items-center justify-between border-b pb-4 transition-colors duration-300 ${
+            isDark ? "border-slate-800" : "border-gray-100"
+          }`}
+        >
           <div className="flex items-center gap-3">
             <Image
               src={`/icons/${icon}.png`}
@@ -33,25 +48,43 @@ export default function AddButton({
               width={32}
               height={32}
             />
-            <h2 className="text-lg font-bold text-slate-700">{label}</h2>
+            <h2
+              className={`text-lg font-bold ${
+                isDark ? "text-white" : "text-slate-700"
+              }`}
+            >
+              {label}
+            </h2>
           </div>
 
           <button
             type="button"
             onClick={onClose}
-            className="cursor-pointer p-1 text-slate-400 hover:text-slate-600"
+            className={`cursor-pointer p-1 transition-colors ${
+              isDark
+                ? "text-slate-400 hover:text-white"
+                : "text-slate-400 hover:text-slate-600"
+            }`}
           >
             <X size={22} />
           </button>
         </div>
 
-        {children}
+        <div className="py-4">{children}</div>
 
-        <div className="flex justify-end gap-3 border-t border-gray-100 pt-4">
+        <div
+          className={`flex justify-end gap-3 border-t pt-4 transition-colors duration-300 ${
+            isDark ? "border-slate-800" : "border-gray-100"
+          }`}
+        >
           <button
             type="button"
             onClick={onClose}
-            className="cursor-pointer rounded-xl border border-[#FF7A59] px-8 py-2.5 font-medium text-[#FF7A59] transition-colors hover:bg-orange-50"
+            className={`cursor-pointer rounded-xl border px-8 py-2.5 font-medium transition-colors ${
+              isDark
+                ? "border-[#FF7A59] text-[#FF7A59] hover:bg-orange-500/10"
+                : "border-[#FF7A59] text-[#FF7A59] hover:bg-orange-50"
+            }`}
           >
             Cancel
           </button>

@@ -9,7 +9,7 @@ import { WarningContent } from "@/components/notification/warnings/WarningConten
 
 export default function NotificationsPage() {
   const [activeTab, setActiveTab] = useState<"alarms" | "warnings">("alarms");
- const { theme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const isDark = theme === "dark";
   return (
     <div
@@ -28,7 +28,7 @@ export default function NotificationsPage() {
           <AlarmContent />
         </div>
       ) : (
-        <div className=" p-12 rounded-2xl border  shadow-sm text-center text-slate-500">
+        <div className=" p-12 rounded-2xl shadow-sm text-center text-slate-500">
           <WarningContent />
         </div>
       )}

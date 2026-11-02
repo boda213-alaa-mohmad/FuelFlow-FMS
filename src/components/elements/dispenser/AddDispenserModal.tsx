@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import AddButton from "./AddButtonModal";
+import AddButton from "../AddButtonModal";
 
 interface AddDispenserModalProps {
   isOpen: boolean;

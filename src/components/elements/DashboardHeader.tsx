@@ -1,17 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Image from "next/image";
+import { ThemeContext } from "../../../context/ThemeContext";
 
-import AddStationModal, { type NewStation } from "./AddStationModal";
-import AddDispenserModal, { type DispenserProps } from "./AddDispenserModal";
-import AddCompressorModal, { type NewCompressor } from "./AddCompressorModal";
-import AddNozzleModal, { type newNozzle } from "./AddNozzleModal";
+import AddStationModal, { type NewStation } from "./station/AddStationModal";
+import AddDispenserModal, {
+  type DispenserProps,
+} from "./dispenser/AddDispenserModal";
+import AddCompressorModal, {
+  type NewCompressor,
+} from "./compressor/AddCompressorModal";
+import AddNozzleModal, { type newNozzle } from "./nozzle/AddNozzleModal";
 
-import StationsTable from "./tableStation";
-import DispensersTable from "./tableDispenser";
-import CompressorsTable from "./tableCompressor";
-import NozzlesTable from "./tableNozzle";
+import StationsTable from "./station/tableStation";
+import DispensersTable from "./dispenser/tableDispenser";
+import CompressorsTable from "./compressor/tableCompressor";
+import NozzlesTable from "./nozzle/tableNozzle";
 
 import { mockStations } from "@/data/mockStations";
 import { mockDispensers } from "@/data/mockDispensers";
@@ -34,6 +39,9 @@ type Station = StationItem;
 type Dispenser = DispenserProps;
 
 export default function DashboardHeader() {
+  const { theme } = useContext(ThemeContext);
+  const isDark = theme === "dark";
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [stations, setStations] = useState<Station[]>(mockStations);
@@ -123,6 +131,12 @@ export default function DashboardHeader() {
     );
   }
 
+  // todo: function compressor
+  function handleEditCompressor(id: string) {
+    console.log(id);
+    setIsModalOpen(true);
+  }
+
   // Nozzles
   function handleAddNozzle(nozzleData: newNozzle) {
     const nozzle: NozzleItem = {
@@ -142,9 +156,9 @@ export default function DashboardHeader() {
   }
 
   return (
-    <div>
+    <div className="space-y-6">
       {/* Dashboard tabs */}
-      <div className="flex flex-wrap justify-center gap-5">
+      <div className="flex flex-wrap justify-center gap-5 items-center">
         {TABS.map((tab) => {
           const isActive = activeTab === tab.id;
 
@@ -153,10 +167,14 @@ export default function DashboardHeader() {
               key={tab.id}
               role="button"
               tabIndex={0}
-              className={`flex h-[140px] w-[270px] cursor-pointer items-center justify-center gap-4 rounded-2xl p-4 transition-all duration-200 ${
+              className={`flex items-center justify-center gap-4 rounded-2xl p-4 transition-all duration-200 cursor-pointer ${
                 isActive
-                  ? "h-[170px] bg-[#FF7A59] text-white shadow-md"
-                  : "bg-[#FBE8E2] text-[#2B3A4A]"
+                  ? isDark
+                    ? "h-[160px] w-[270px] bg-[#371007]/15 border-2 border-[#FF7A59] text-white shadow-md backdrop-blur-sm"
+                    : "h-[160px] w-[270px] bg-[#FFF2EE] border-2 border-[#FF7A59] text-[#2B3A4A] shadow-sm"
+                  : isDark
+                    ? "h-[140px] w-[270px] bg-slate-900/60 border border-slate-800 text-slate-400 hover:bg-slate-800/80 hover:text-slate-200"
+                    : "h-[140px] w-[270px] bg-[#FBE8E2]/60 border border-transparent text-slate-600 hover:bg-[#FBE8E2]"
               }`}
               onClick={() => handleTabChange(tab.id)}
               onKeyDown={(event) => {
@@ -166,8 +184,8 @@ export default function DashboardHeader() {
                 }
               }}
             >
-              <Image src={tab.icon} alt="" width={49} height={49} />
-              <p className="text-2xl font-medium">{tab.label}</p>
+              <Image src={tab.icon} alt="" width={44} height={44} />
+              <p className="text-xl font-semibold">{tab.label}</p>
             </div>
           );
         })}
@@ -214,6 +232,7 @@ export default function DashboardHeader() {
           <CompressorsTable
             compressors={compressors}
             onDelete={handleDeleteCompressor}
+            onEdit={handleEditCompressor}
           />
         </>
       )}
